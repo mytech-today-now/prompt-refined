@@ -26,6 +26,19 @@ A formal **agent skill definition** describing prompt-engineering competencies, 
 
 **Best for:** long-running agents, repeated prompt-optimization workflows, or teams standardizing on a shared methodology.
 
+## 3. `image-prompt.md`
+
+A ready-to-use **prompt template** that refactors generates an image prompt based on any file you reference or attach to it.
+
+**How to use:**
+1. Open the file and copy its entire contents.
+2. Paste it into a chat with any capable LLM (ChatGPT, Claude, Gemini, etc.).
+3. Re-word the sentence ""in the attached reference image (the uploaded file at [file path])"" so that the AI understands what file you are referencing.
+5. Submit. The model returns only the Refined Prompt — no commentary.
+6. Copy and Paste the Refined Prompt into a New Chat in an Image AI Generator, and press Submit.
+
+**Best for:** quick, one-shot prompt rewrites when you just need a better version of a draft.
+
 ## Choosing between them
 
 | Need | Use |
