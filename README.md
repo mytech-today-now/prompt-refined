@@ -16,25 +16,41 @@ A formal **agent skill definition** describing prompt-engineering competencies, 
 ### Recommended Placement Options
 
 1. **.agents folder** (for agent/framework configurations)
-```your-project/.agents/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
-```~/.agents/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```
+your-project/.agents/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
+```
+~/.agents/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
 
 2. **Project-specific skill** (recommended — version-controlled)
-```your-project/.claude/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```
+your-project/.claude/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
 
 3. **Personal/global skill** (available across all projects)
-```~/.claude/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```
+~/.claude/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
 
 4. **Direct project root** (simple system prompt reference)
-```your-project/SKILLS-expert-prompt-engineering-optimization.md```
+```
+your-project/SKILLS-expert-prompt-engineering-optimization.md
+```
 
 5. **Custom skills directory in repo**
-```your-project/skills/prompt-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```
+your-project/skills/prompt-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
 
-```your-project/.claude/skills/prompt-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```
+your-project/.claude/skills/prompt-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
 
 6. **Alternative IDE (e.g. Cursor)**
-```your-project/.cursor/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```
+your-project/.cursor/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md
+```
 
 **Best for:** long-running agents, repeated prompt-optimization workflows, or teams standardizing on a shared methodology.
 
@@ -43,9 +59,9 @@ A formal **agent skill definition** describing prompt-engineering competencies, 
 A ready-to-use **prompt template** that refactors any prompt you paste into it.
 
 **How to use:**
-1. Open the file and copy its entire contents.
+1. Open `highest-quality-most-effective-prompt-possible.md` and copy its entire contents.
 2. Paste it into a chat with any capable LLM (ChatGPT, Claude, Gemini, etc.).
-3. Replace [Insert the user's prompt here] with your actual prompt; what you want to do.
+3. Replace ```[Insert the user's prompt here]``` with your actual prompt; what you want the AI to do.
 5. Submit. The model returns only the Refined Prompt — no commentary.
 6. Copy and Paste the Refined Prompt into a New Chat, and press Submit.
 
@@ -56,9 +72,9 @@ A ready-to-use **prompt template** that refactors any prompt you paste into it.
 A ready-to-use **prompt template** that generates an image prompt based on any file you reference or attach to it.
 
 **How to use:**
-1. Open the file and copy its entire contents.
+1. Open `image-prompt.md` and copy its entire contents.
 2. Paste it into a chat with any capable LLM (ChatGPT, Claude, Gemini, etc.).
-3. Re-word the sentence ""in the attached reference image (the uploaded file at [file path])"" so that the AI understands what file you are referencing.
+3. Re-word the sentence ""in the attached reference image (the uploaded file at [file path])"" so that the AI understands what file you are referencing.  For example ""in the attached reference image."" or """"in the uploaded file at `path/to/file.ext`""
 5. Submit. The model returns only the Refined Prompt — no commentary.
 6. Copy and Paste the Refined Prompt into a New Chat in an Image AI Generator, and press Submit.
 
