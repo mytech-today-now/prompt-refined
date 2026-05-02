@@ -13,7 +13,6 @@ A formal **agent skill definition** describing prompt-engineering competencies, 
 
 **Correct possible system paths** for placing `SKILLS-expert-prompt-engineering-optimization.md` (or its content as `SKILL.md`) when using it with AI in an IDE:
 
-```markdown
 ### Recommended Placement Options
 
 1. **.agents folder** (for agent/framework configurations)
