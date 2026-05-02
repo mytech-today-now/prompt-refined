@@ -11,6 +11,32 @@ A formal **agent skill definition** describing prompt-engineering competencies, 
 - **As a system prompt:** paste it into the system / developer message slot of an LLM session to make the model behave as a prompt-engineering specialist for the whole conversation.
 - **As a reference:** read it directly to learn the methodology, competencies, and token-budgeting discipline it codifies.
 
+**Correct possible system paths** for placing `SKILLS-expert-prompt-engineering-optimization.md` (or its content as `SKILL.md`) when using it with AI in an IDE:
+
+```markdown
+### Recommended Placement Options
+
+1. **.agents folder** (for agent/framework configurations)
+```your-project/.agents/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+```~/.agents/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+
+2. **Project-specific skill** (recommended — version-controlled)
+```your-project/.claude/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+
+3. **Personal/global skill** (available across all projects)
+```~/.claude/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+
+4. **Direct project root** (simple system prompt reference)
+```your-project/SKILLS-expert-prompt-engineering-optimization.md```
+
+5. **Custom skills directory in repo**
+```your-project/skills/prompt-expert/SKILLS-expert-prompt-engineering-optimization.md```
+
+```your-project/.claude/skills/prompt-expert/SKILLS-expert-prompt-engineering-optimization.md```
+
+6. **Alternative IDE (e.g. Cursor)**
+```your-project/.cursor/skills/prompt-engineering-expert/SKILLS-expert-prompt-engineering-optimization.md```
+
 **Best for:** long-running agents, repeated prompt-optimization workflows, or teams standardizing on a shared methodology.
 
 ## 2. `highest-quality-most-effective-prompt-possible.md`
