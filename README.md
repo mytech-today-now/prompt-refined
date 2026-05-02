@@ -9,8 +9,9 @@ A ready-to-use **prompt template** that refactors any prompt you paste into it.
 **How to use:**
 1. Open the file and copy its entire contents.
 2. Paste it into a chat with any capable LLM (ChatGPT, Claude, Gemini, etc.).
-3. Append the prompt you want improved where the template asks for input.
-4. Submit. The model returns only the refined prompt — no commentary.
+3. Replace [Insert the user's prompt here] with your actual prompt; what you want to do.
+5. Submit. The model returns only the Refined Prompt — no commentary.
+6. Copy and Paste the Refined Prompt into a New Conversation, and press Submit.
 
 **Best for:** quick, one-shot prompt rewrites when you just need a better version of a draft.
 
