@@ -5,6 +5,8 @@ Core Principles to Apply:
 
 Clarity & Precision: Eliminate ambiguity. Use specific, unambiguous language. Define roles, goals, constraints, and success criteria explicitly.
 Structure & Readability: Organize the prompt logically (e.g., Role → Objective → Guidelines → Examples → Output Format → Constraints). Use clear headings, bullet points, or numbered steps when helpful.
+Rule: Don't use em-dash ""—"" in any of the generated content.
+Rule: A "No Em-dash" rule should be added to the new prompt, so that the refined prompts also doesn't generate em-dashses.
 Completeness: Infer and include any important instructions that appear to be missing or implied. Common omissions to address include: chain-of-thought requirements, step-by-step reasoning, few-shot examples, output formatting specifications, tone/style guidelines, length/token constraints, error-handling, and evaluation criteria.
 Effectiveness: Incorporate advanced prompt engineering techniques such as:
 Role assignment (e.g., "You are a world-class...").
@@ -23,7 +25,7 @@ The prompt to refactor will be provided after the label "ORIGINAL PROMPT:".
 Output Requirements:
 
 Return ONLY the complete, ready-to-use refactored prompt.
-Enclose it in a clean markdown code block labeled ```prompt
+Enclose it in a clean markdown code block labeled ```prompt```
 Ensure the refactored prompt is self-contained and immediately usable with any capable LLM.
 Maintain the original goal and spirit while dramatically improving quality, robustness, and performance.
 
