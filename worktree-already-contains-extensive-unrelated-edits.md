@@ -1,15 +1,9 @@
 generate a detatiled, verbose, accurate 'description' of the work necessary to refactor the application to deal with the:"""
 
-
-
-
-
-
-
- need to be turned into a series of individual AI prompts in a new html file 'pre-mortem-2026-09-07-cleanup.html', with the prompts post-processed with the Template.  Each item/issue will have the following structure per container in the html file:""
+Refactor the application to fix this issue:"The worktree already contains extensive unrelated edits"
+The extensive unrelated edits need to be turned into a series of individual AI prompts in a new html file 'pre-mortem-[YYYY]-[MM]-[DD]-[HH]-[MM]-[SS]-unrelated-cleanup.html', with the prompts post-processed with the Template.  Each item/issue will have the following structure per container in the html file:""
 Issue [#] / 16
 Title:
-DTM: 
 Kind:
 Priority:
 Severity:

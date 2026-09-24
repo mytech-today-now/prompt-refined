@@ -146,6 +146,52 @@ Require the most suitable combination of unit, component, integration, API, data
 
 Favor the lowest-cost test that proves the behavior. Add higher-level tests when integration or user-facing behavior cannot be validated adequately at a lower level.
 
+#### Applicable Test Categories
+Tests (where applicable):
+- Unit Testing:
+- Integration Testing:
+- System Testing:
+- Acceptance Testing:
+- End-to-End Testing:
+- Smoke Testing:
+- Sanity Testing:
+- Regression Testing:
+- Functional Testing:
+- Non-Functional Testing:
+- Performance Testing:
+- Load Testing:
+- Stress Testing:
+- Spike Testing:
+- Soak Testing:
+- Scalability Testing:
+- Security Testing:
+- Penetration Testing:
+- Usability Testing:
+- Accessibility Testing:
+- Compatibility Testing:
+- Cross-Browser Testing:
+- Mobile Testing:
+- API Testing:
+- UI Testing:
+- Database Testing:
+- Black Box Testing:
+- White Box Testing:
+- Grey Box Testing:
+- Manual Testing:
+- Automated Testing:
+- Exploratory Testing:
+- Ad-hoc Testing:
+- Mutation Testing:
+- Static Testing:
+- Dynamic Testing:
+- Alpha Testing:
+- Beta Testing:
+- Recovery Testing:
+- Localization Testing:
+- Additional baseline tests:
+Acceptance criteria:
+Confidence:
+
 ### 8. Test Quality Requirements
 
 Tests must be deterministic, isolated, repeatable, meaningfully named, focused on observable behavior, independent of execution order, free from unnecessary timing assumptions, clear about setup, action, and expected result, capable of detecting a real regression, and consistent with repository conventions.
@@ -239,6 +285,64 @@ The returned prompt must:
 - Contain no preamble explaining that the prompt was refined.
 - Contain no commentary outside the generated prompt.
 - Contain no em-dashes.
+- Have the following format:
+   (Each item/issue will have the following structure per container in the html file):""
+   Issue [#] / 16
+   Title:
+   Kind:
+   Priority:
+   Severity:
+   Likelihood:
+   Impacted area:
+   Failure mode:
+   Evidence or rationale:
+   Why this matters:
+   Implementation prompt: [This is the main Prompt that drives the refactoring.]
+   Tests (where applicable):
+   - Unit Testing:
+   - Integration Testing:
+   - System Testing:
+   - Acceptance Testing:
+   - End-to-End Testing:
+   - Smoke Testing:
+   - Sanity Testing:
+   - Regression Testing:
+   - Functional Testing:
+   - Non-Functional Testing:
+   - Performance Testing:
+   - Load Testing:
+   - Stress Testing:
+   - Spike Testing:
+   - Soak Testing:
+   - Scalability Testing:
+   - Security Testing:
+   - Penetration Testing:
+   - Usability Testing:
+   - Accessibility Testing:
+   - Compatibility Testing:
+   - Cross-Browser Testing:
+   - Mobile Testing:
+   - API Testing:
+   - UI Testing:
+   - Database Testing:
+   - Black Box Testing:
+   - White Box Testing:
+   - Grey Box Testing:
+   - Manual Testing:
+   - Automated Testing:
+   - Exploratory Testing:
+   - Ad-hoc Testing:
+   - Mutation Testing:
+   - Static Testing:
+   - Dynamic Testing:
+   - Alpha Testing:
+   - Beta Testing:
+   - Recovery Testing:
+   - Localization Testing:
+   - Additional baseline tests:
+   Acceptance criteria:
+   Confidence:
+   ""
 
 ## No Em-Dash Rule
 
