@@ -4,7 +4,7 @@ You are a world-class senior full-stack engineer, software reliability analyst, 
 
 Perform an evidence-based gap analysis and pre-mortem review of the application in the current working project. Then write one polished, static, self-contained HTML report that another coding agent can use to remediate each finding safely and verify the result.
 
-The report must contain exactly 16 distinct, repository-grounded issue sections. Each section must include a detailed, copy-paste-ready implementation prompt.
+The report must contain exactly 20 distinct, repository-grounded issue sections. Exactly 15 of the issues must be classified as Priority P1 and Severity 1. The remaining 5 must not have that combined classification. Each section must include a detailed, copy-paste-ready implementation prompt.
 
 Think step by step before writing the file. Inspect first. Draft second. Validate third. Write the file only after validation checks pass.
 
@@ -103,18 +103,20 @@ Inspect the repository structure and identify, with file paths:
 
 # Issue Selection Rule
 
-The source request refers to 10 mandatory issues but does not provide 10 named issue descriptions. It contains only a placeholder for gaps in the application.
+The source request requires 20 issues but does not provide named issue descriptions. It contains only a placeholder for gaps in the application.
 
 Do not pretend that a missing list was supplied. Resolve the inconsistency as follows:
 
-1. Identify the 10 highest-priority core issues from repository evidence.
-2. Identify 6 additional high-value issues.
-3. Produce exactly 16 issue sections total.
-4. Make the six additional issues distinct from the 10 core issues and from one another.
-5. State in the document's scope notes that the 10 core issues were selected through repository inspection because the source request did not enumerate them.
-6. Mark each issue as `Core` or `Additional` in both the risk table and the issue article.
-7. Treat this resolution as an explicit, testable input assumption.
-8. Do not create a separate issue section for the placeholder itself.
+1. Identify the 15 highest-priority core issues from repository evidence.
+2. Identify 5 additional high-value issues.
+3. Produce exactly 20 issue sections total.
+4. Make the five additional issues distinct from the 15 core issues and from one another.
+5. Classify all 15 core issues as Priority P1 and Severity 1. None of the 5 additional issues may have the combined classification Priority P1 and Severity 1; choose their priority and severity based on the evidence.
+6. Assess priority and severity independently. Do not elevate either classification solely to satisfy the required counts. If repository evidence and explicitly labeled `Testable assumption` risks cannot support this allocation, state the limitation rather than invent or misclassify issues.
+7. State in the document's scope notes that the 15 core issues were selected through repository inspection because the source request did not enumerate them.
+8. Mark each issue as `Core` or `Additional` in both the risk table and the issue article.
+9. Treat this resolution as an explicit, testable input assumption.
+10. Do not create a separate issue section for the placeholder itself.
 
 Prioritize issues that materially affect one or more of these areas:
 
@@ -136,7 +138,7 @@ Prioritize issues that materially affect one or more of these areas:
 
 Do not include cosmetic preferences, generic best practices, speculative architecture changes, or low-value test suggestions merely to reach the required count.
 
-If fewer than 16 confirmed defects exist:
+If fewer than 20 confirmed defects exist:
 
 1. Include well-supported pre-mortem risks based on observed implementation gaps.
 2. Label inferential risks as `Testable assumption`.
@@ -186,8 +188,8 @@ Create one valid HTML5 document in this order:
    - Executive summary
    - Review scope and methodology
    - Input-resolution note covering the missing mandatory-issue list
-   - Prioritized risk table containing all 16 issues
-   - Exactly 16 issue `<article>` elements, ordered by severity, likelihood, impact, and urgency
+   - Prioritized risk table containing all 20 issues
+   - Exactly 20 issue `<article>` elements, ordered by severity, likelihood, impact, and urgency
    - Scope notes and limitations
    - Footer with the repository identity, generation timestamp, output path, and report scope
 
@@ -212,7 +214,7 @@ Use semantic elements where appropriate, including:
 Give every issue article:
 
 - A stable unique ID such as `issue-01`
-- A visible issue number from 1 through 16
+- A visible issue number from 1 through 20
 - A descriptive title
 - A `data-issue-kind` value of `core` or `additional`
 - A consistent issue-specific CSS class or data attribute that permits reliable counting
@@ -221,7 +223,7 @@ The risk table must contain exactly one row for each issue and must match the is
 
 # Required Content for Every Issue
 
-Each of the 16 issue articles must include all of the following labeled subsections, in this order:
+Each of the 20 issue articles must include all of the following labeled subsections, in this order:
 
 1. Title
 2. Kind (`Core` or `Additional`)
@@ -239,12 +241,19 @@ Each of the 16 issue articles must include all of the following labeled subsecti
 14. Acceptance criteria
 15. Confidence
 
+Use a consistent priority scale, with P1 as the highest priority and P4 as the lowest:
+
+- P1
+- P2
+- P3
+- P4
+
 Use a consistent severity scale:
 
-- Critical
-- High
-- Medium
-- Low
+- Severity 1 (Critical)
+- Severity 2 (High)
+- Severity 3 (Medium)
+- Severity 4 (Low)
 
 Use a consistent likelihood scale:
 
@@ -460,7 +469,7 @@ Separate tests into:
 11. Keep the report readable in modern browsers and when printed.
 12. Do not include external fonts, stylesheets, scripts, images, analytics, trackers, or network requests.
 13. Do not include JavaScript unless an existing pre-mortem reference establishes a necessary static-document behavior. If JavaScript is retained, embed it locally and ensure the document remains fully readable without it.
-14. Target a comprehensive report. A typical complete document is 8,000 to 20,000 words of substantive content. Do not pad. Do not omit required subsections to stay short.
+14. Target a comprehensive report. A typical complete document is 14,000 to 28,000 words of substantive content. Do not pad. Do not omit required subsections to stay short.
 
 # No Em-Dash Rule
 
@@ -481,11 +490,11 @@ Before completing the task, validate all of the following:
 3. No preexisting file in `./ai-prompts/` was modified or overwritten.
 4. The new file uses the timestamped name `pre-mortem-YYYY-MM-DD-HH-MM-SS.html`.
 5. The file is valid, complete HTML5 with balanced structural tags.
-6. The document contains exactly 16 issue articles.
-7. Issue IDs are unique and sequential from `issue-01` through `issue-16`.
-8. The prioritized risk table contains exactly 16 issue rows.
+6. The document contains exactly 20 issue articles.
+7. Issue IDs are unique and sequential from `issue-01` through `issue-20`.
+8. The prioritized risk table contains exactly 20 issue rows.
 9. Every risk-table row corresponds to exactly one issue article.
-10. The 10 core issues and 6 additional issues are clearly distinguishable.
+10. The 15 core issues and 5 additional issues are clearly distinguishable; all 15 core issues are Priority P1 and Severity 1, and none of the 5 additional issues has that combined classification.
 11. Every issue contains all required labeled subsections.
 12. Every issue contains a complete implementation prompt.
 13. Every issue contains regression tests, additional baseline tests, and measurable acceptance criteria.
@@ -510,9 +519,9 @@ The task is complete only when:
 
 1. A new timestamped HTML file exists at `./ai-prompts/pre-mortem-YYYY-MM-DD-HH-MM-SS.html` under the resolved project root.
 2. The file was created without overwriting any existing file.
-3. It contains exactly 16 evidence-based issue sections.
-4. The first 10 are the highest-priority core issues identified through repository inspection.
-5. The remaining 6 are additional, high-value, non-overlapping issues.
+3. It contains exactly 20 evidence-based issue sections.
+4. The first 15 are the highest-priority core issues identified through repository inspection, each classified as Priority P1 and Severity 1.
+5. The remaining 5 are additional, high-value, non-overlapping issues, none classified as both Priority P1 and Severity 1.
 6. All issue sections contain the required metadata, implementation guidance, tests, and acceptance criteria.
 7. The visual treatment is consistent with existing pre-mortem documents when those documents exist.
 8. The document is static, semantic, accessible, self-contained, and printable.
