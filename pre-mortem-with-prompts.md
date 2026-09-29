@@ -2,7 +2,7 @@ You are a world-class senior full-stack engineer, software reliability analyst, 
 
 # Objective
 
-Perform an evidence-based gap analysis and pre-mortem review of the application in the current working project. Then write one polished, static, self-contained HTML report that another coding agent can use to remediate each finding safely and verify the result.
+Perform an evidence-based gap analysis and pre-mortem review of the application in the current working project. Then write one polished, static HTML report that another coding agent can use to remediate each finding safely and verify the result. Load the shared stylesheet and optional progressive enhancement from the repository asset URLs specified below. Keep the report meaningful when either remote asset fails to load.
 
 The report must contain exactly 20 distinct, repository-grounded issue sections. Exactly 15 of the issues must be classified as Priority P1 and Severity 1. The remaining 5 must not have that combined classification. Each section must include a detailed, copy-paste-ready implementation prompt.
 
@@ -13,7 +13,7 @@ Think step by step before writing the file. Inspect first. Draft second. Validat
 1. The current working directory, or the nearest Git repository root above it, is the project under review.
 2. Resolve the project root by checking, in order: the active workspace root, the nearest directory containing `.git`, then the nearest directory containing `AGENTS.md`, `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `composer.json`, or an equivalent project manifest.
 3. Detect the repository identity from local evidence only: `git remote -v`, `git rev-parse --show-toplevel`, `git branch --show-current`, the project manifest, README files, and `AGENTS.md`.
-4. Do not require the user to name the repo. Do not hardcode FilmBuff, any other product name, any Windows path, or any GitHub URL from prior prompts.
+4. Do not require the user to name the repo. Do not hardcode FilmBuff, any other product name, or any Windows path. For generated report assets, use only the exact repository URLs in the shared asset contract below. Do not substitute any other GitHub URL for those assets.
 5. If multiple nested projects exist, review the project that owns the current working tree. State that choice in the report scope notes.
 
 # Output File Rules
@@ -89,9 +89,42 @@ Inspect the repository structure and identify, with file paths:
 
 1. List files in `./ai-prompts/` if that directory exists.
 2. Identify the most relevant and recent complete file whose name begins with `pre-mortem`.
-3. Reuse that document's visual language, layout conventions, typography, spacing, color system, risk presentation, print styling, and component patterns.
-4. Copy or adapt the required CSS into the new document so the result has no runtime dependency on the reference file.
-5. If no prior pre-mortem file exists, create a professional, print-ready, self-contained visual system that remains readable with CSS disabled. Document that fallback in the scope notes.
+3. Use its visual language, layout conventions, typography, spacing, color system, risk presentation, print styling, and component patterns as design references where compatible with the shared selector contract.
+4. Do not copy CSS into the generated document. Use the single shared stylesheet URL. The `style.css` file contains Basic, Minimal, and Full & complete style configurations selected by the accessible report controls, not by changing the stylesheet URL.
+5. If no prior pre-mortem file exists, use the shared default Basic style and System color mode, and document that design choice in the scope notes. Preserve readable semantic HTML when CSS does not load.
+
+## Shared report assets and HTML contract
+
+Use only these exact raw GitHub URLs in generated HTML:
+
+- `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css`
+- `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`
+
+Include exactly one `<link rel="stylesheet">` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css` and exactly one deferred external `<script>` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`. There is only one stylesheet file. Do not use relative asset paths or add alternate stylesheet links.
+
+The generated document must not contain `<style>` blocks, `style` attributes, inline `<script>` blocks, inline event handlers, duplicated JavaScript, or JavaScript in attributes. The only permitted runtime assets are the single stylesheet and script above. Do not add external fonts, images, libraries, trackers, analytics, or other network dependencies. Local asset files do not prove that the raw URLs are available: availability depends on the files being committed and published to the `main` branch. Do not claim publication or availability without verification.
+
+Initialize the document root with `data-report-style="basic"` and `data-color-mode="system"`. The single `style.css` must define three distinct configurations: `basic`, `minimal`, and `full`. Add an accessible, initially hidden appearance fieldset in the report header with a labelled style select (`basic`, `minimal`, `full`) and a labelled color-mode select (`system`, `light`, `dark`). Its visible option labels must be `Basic`, `Minimal`, `Full & complete style`, `System`, `Light`, and `Dark`. Select Basic and System by default. Include a `.preferences-status` live region and a `<noscript>` explanation. The shared script must reveal the controls only after they are initialized.
+
+Persist the selected style and color mode across report reloads and browser sessions using `localStorage` with the exact key `prompt-refined:report-preferences:v1`. On startup, read and allowlist the saved values before applying them; invalid or absent values use Basic and System. Changing either control updates the root data attributes and saves the choices. System mode follows `prefers-color-scheme`; Light and Dark explicitly override it. If storage is unavailable or rejects a write, the controls must still work for the current page and `.preferences-status` must explain that the setting was not saved. Store only these nonsensitive appearance choices. Do not imply that report content edits are persisted.
+
+Persist issue progress separately for this report. Use the key `prompt-refined:issue-progress:v1:<encoded-document-path>`, where `<encoded-document-path>` is `encodeURIComponent(window.location.pathname || document.title || "report")`. Store an allowlisted map from each issue article ID to `incomplete`, `in-progress`, or `complete`. This keeps progress for separate report files independent even though their issue IDs match. Restore valid values when the report opens, default missing or invalid values to `incomplete`, and save each user change. If storage cannot be read or written, keep the controls and in-page state working and explain access or persistence failure in an accessible live region. Persist these progress choices only; do not suggest that report content edits are saved.
+
+Use this shared semantic markup and selector contract in the generated report:
+
+- `<header class="report-header">`, `<main class="report-main">`, and `<footer class="report-footer">` for the document landmarks. Use `.report-title` for the document title and `.report-meta` for repository identity, branch, and timestamp metadata.
+- Set `data-report-style="basic"` and `data-color-mode="system"` on `<html>` in the static file. Include `<fieldset class="report-preferences" data-report-preferences hidden>` in the header. It contains a `<select data-report-style-control>` with `basic`, `minimal`, and `full` values and a `<select data-color-mode-control>` with `system`, `light`, and `dark` values. Associate visible labels with both controls and use the option labels specified above. Include `<p class="preferences-status" data-preferences-status role="status" aria-live="polite"></p>`, `<p class="issue-progress-storage-status" data-issue-progress-status role="status" aria-live="polite"></p>`, and a `<noscript>` explanation that the page uses Basic styling and follows the system color preference. Also explain that copy and progress controls require JavaScript while report text remains available.
+- `.report-summary` for the executive summary, `.scope-notes` for review scope and limitations, and `.risk-register` for the prioritized risk table.
+- A table of contents in `<nav class="issue-toc" aria-label="Table of contents">`, with one `.issue-toc-link` linking to each issue article. Each link contains a visible `<span class="issue-toc-status" data-issue-progress-indicator="issue-01" data-progress="incomplete">Incomplete</span>` whose issue ID matches its article.
+- Wrap the semantic risk table in a keyboard-focusable `.risk-table-wrap` with `role="region"`, `aria-label="Risk register"`, and `tabindex="0"`; give the table `.risk-table`, preserving `<table>`, `<thead>`, `<tbody>`, and `<tr>` semantics.
+- Put the 20 finding articles inside `.issue-list`. Each is `<article class="issue" id="issue-01" data-issue-kind="core" data-progress="incomplete">` or the corresponding sequential ID and `core` or `additional` value. Use `.issue-header`, `.issue-number`, `.issue-title`, and `.issue-kind` for the visible finding heading and kind. Each TOC link and status indicator must point to and match exactly one article.
+- Put issue metadata in `<dl class="issue-fields">` with semantic `<dt>` and `<dd>` elements. Show priority and severity as visible text in `.priority-label[data-priority]` and `.severity-label[data-severity]` elements, using `p1` through `p4` and `1` through `4` as data values. Their written labels must identify the classifications; color must not be the only signal.
+- Put each implementation prompt's copyable text in `<pre class="implementation-prompt" data-copy-target><code>...</code></pre>`. Keep the prompt text visible and selectable without JavaScript.
+- The shared script initializes appearance and issue-progress controls, validates and persists their allowlisted values, synchronizes each article's `data-progress`, its visible progress badge, and its matching TOC indicator, and provides an accessible report-level storage status. Add one keyboard-operable progress selector to each issue with the visible options `Incomplete`, `In progress`, and `Complete`. If storage fails, changes still apply to the current page and the live region explains that they will not persist.
+- Add one keyboard-operable button labelled `Copy Issue to Clipboard` to each issue. It copies the entire readable article from the visible issue number through the final issue content, including metadata, implementation prompt, tests, and acceptance criteria. Exclude dynamically inserted controls and statuses from copied text. Announce success, or explain that the user can select and copy the visible issue manually if clipboard access is unavailable or rejected. Clipboard failure must not alter or remove issue text.
+- Keep the separate implementation-prompt copy button after each marked prompt. Its `.copy-control` and `.copy-status` must not appear in whole-issue clipboard text. Use safe DOM APIs and text properties, never `innerHTML`. Reinitializing the script must not create duplicate issue controls, prompt controls, or event listeners.
+
+The single stylesheet must support all shared classes and data attributes in the Basic, Minimal, and Full configurations and each System, Light, and Dark color mode. It must provide responsive layouts, readable long text and code, accessible contrast, visible keyboard focus wherever controls appear, visually distinguishable issue progress states and TOC badges, and print rules that do not clip or truncate content. Keep the current progress label visible in print while hiding interactive buttons and selectors. Do not rely on color alone for risk classifications or progress. Keep semantic content understandable if CSS or JavaScript is disabled or cannot be fetched.
 
 ## Diagnostics
 
@@ -177,21 +210,24 @@ If a conclusion requires inference:
 Create one valid HTML5 document in this order:
 
 1. `<!doctype html>`
-2. `<html lang="en">`
+2. `<html lang="en" data-report-style="basic" data-color-mode="system">`
 3. `<head>` containing:
    - UTF-8 character encoding
    - Responsive viewport metadata
    - Descriptive title that includes the detected project name and generation timestamp
-   - Self-contained CSS adapted from the selected pre-mortem reference, or an original self-contained stylesheet if no reference exists
+   - Exactly one stylesheet link to the default shared `style.css` raw URL above
 4. `<body>` containing:
-   - Header with title, generation timestamp, detected repository identity, branch, and purpose
-   - Executive summary
+   - Header with class `report-header`, title, generation timestamp, detected repository identity, branch, purpose, and the accessible appearance controls specified above
+   - Main landmark with class `report-main`
+   - Executive summary in a section with class `report-summary`
    - Review scope and methodology
    - Input-resolution note covering the missing mandatory-issue list
-   - Prioritized risk table containing all 20 issues
-   - Exactly 20 issue `<article>` elements, ordered by severity, likelihood, impact, and urgency
-   - Scope notes and limitations
-   - Footer with the repository identity, generation timestamp, output path, and report scope
+   - A table of contents in `<nav class="issue-toc" aria-label="Table of contents">` with one link and matching progress indicator for each issue
+   - Prioritized risk table containing all 20 issues inside `.risk-register`, `.risk-table-wrap`, and `.risk-table`
+   - Exactly 20 issue articles inside `.issue-list`, ordered by severity, likelihood, impact, and urgency, each initialized with `data-progress="incomplete"`
+   - Scope notes and limitations in a section with class `scope-notes`
+   - Footer with class `report-footer`, repository identity, generation timestamp, output path, and report scope
+   - Exactly one deferred external script reference to the shared `code.js` raw URL above
 
 Use semantic elements where appropriate, including:
 
@@ -214,10 +250,17 @@ Use semantic elements where appropriate, including:
 Give every issue article:
 
 - A stable unique ID such as `issue-01`
+- The class `issue`
+- A `data-progress="incomplete"` default value
 - A visible issue number from 1 through 20
 - A descriptive title
 - A `data-issue-kind` value of `core` or `additional`
-- A consistent issue-specific CSS class or data attribute that permits reliable counting
+- An `.issue-title` heading and visible `.issue-kind` label
+- Visible `.priority-label[data-priority]` and `.severity-label[data-severity]` classification labels
+- A `.implementation-prompt` `<pre data-copy-target>` containing only the copyable implementation prompt, with its text nested in `<code>`
+- A corresponding TOC entry with a unique link to the article and a matching `.issue-toc-status[data-issue-progress-indicator="issue-01"]`
+
+The shared script must add one keyboard-operable `Copy Issue to Clipboard` button and one progress selector to each article. The issue-copy button copies all readable article text, beginning with the visible issue number and ending with the final issue content. It includes all metadata, implementation prompt text, tests, and acceptance criteria, but excludes dynamically inserted action controls and copy statuses. The progress selector offers `Incomplete`, `In progress`, and `Complete`; changes update the article's `data-progress`, visible state badge, and only the matching TOC status. Both controls remain usable when storage or clipboard access fails. Announce success or a clear manual-copy instruction for clipboard failure. Persist progress by report path and stable issue ID, validate the three state values, and default invalid or missing values to `incomplete`.
 
 The risk table must contain exactly one row for each issue and must match the issue articles in number, title, kind, severity, likelihood, impacted area, and priority.
 
@@ -467,8 +510,8 @@ Separate tests into:
 9. Make each implementation prompt detailed enough to execute without requiring the agent to reinterpret the issue.
 10. Escape repository code and user-controlled values before embedding them in HTML.
 11. Keep the report readable in modern browsers and when printed.
-12. Do not include external fonts, stylesheets, scripts, images, analytics, trackers, or network requests.
-13. Do not include JavaScript unless an existing pre-mortem reference establishes a necessary static-document behavior. If JavaScript is retained, embed it locally and ensure the document remains fully readable without it.
+12. Use only the exact shared stylesheet and script URLs specified in the asset contract. Do not add external fonts, images, libraries, analytics, trackers, or other network dependencies.
+13. Keep all CSS in the shared stylesheet and all JavaScript in the shared `js/code.js` source. Generated HTML may include only the single external deferred script reference specified above. Do not embed CSS or JavaScript, add inline style or event-handler attributes, or duplicate script logic. Keep copy and progress enhancements optional and ensure the document remains readable and its issue text and prompts remain selectable if JavaScript is unavailable.
 14. Target a comprehensive report. A typical complete document is 14,000 to 28,000 words of substantive content. Do not pad. Do not omit required subsections to stay short.
 
 # No Em-Dash Rule
@@ -502,14 +545,24 @@ Before completing the task, validate all of the following:
 15. No issue is duplicated or merely a narrower restatement of another issue.
 16. No unsupported file, route, API, service, or behavior is presented as fact.
 17. The file contains no em dash character.
-18. The file contains no external runtime dependency.
+18. The document references exactly one permitted shared stylesheet URL and one deferred shared script URL, with no other runtime dependencies.
 19. The document remains understandable with CSS disabled.
-20. The document is readable at mobile and desktop widths.
-21. Print preview does not clip text, truncate implementation prompts, or force unnecessary page breaks.
-22. HTML-sensitive repository excerpts are correctly escaped.
-23. Any commands reported as executed include their actual outcomes.
-24. No secrets or sensitive user data appear in the document.
-25. No application or repository file other than the new report was modified.
+20. The document uses the shared selector contract, one stylesheet link to the exact `style.css` raw URL, and one deferred script link to the exact `code.js` raw URL.
+21. The document is readable at mobile and desktop widths.
+22. Print preview does not clip text or truncate implementation prompts.
+23. With JavaScript disabled or clipboard access unavailable or rejected, all issue and prompt text remains intact and users receive a clear manual-copy path when controls are present.
+24. Each of the 20 articles has exactly one whole-issue copy control that copies the issue number through its last content and excludes inserted UI controls.
+25. Issue-copy success and unavailable or rejected clipboard access are announced accessibly, with no issue text changed or removed.
+26. Each issue has one progress selector with Incomplete, In progress, and Complete states. Changing it updates the article style and visible state, the matching TOC indicator, and report-scoped saved progress.
+27. Missing, invalid, inaccessible, or rejected progress storage defaults safely, keeps current-page controls working, and explains persistence failure accessibly.
+28. Initializing the shared script more than once does not create duplicate issue or prompt copy controls, progress controls, or event listeners.
+29. The style selector offers Basic, Minimal, and Full & complete style, and the color selector offers System, Light, and Dark. The initial selections and root attributes are Basic and System.
+30. All nine style and color-mode combinations work without changing the stylesheet URL; System follows the operating system preference, while Light and Dark override it.
+31. Style and mode selections persist after reload and a new browser session when local storage is available. Invalid, inaccessible, or rejected appearance storage uses safe defaults, keeps current-page controls functional, and reports failed persistence accessibly.
+32. HTML-sensitive repository excerpts are correctly escaped.
+33. Any commands reported as executed include their actual outcomes.
+34. No secrets or sensitive user data appear in the document.
+35. No application or repository file other than the new report was modified.
 
 If a validation fails, correct the document and repeat validation before finishing.
 
@@ -524,10 +577,13 @@ The task is complete only when:
 5. The remaining 5 are additional, high-value, non-overlapping issues, none classified as both Priority P1 and Severity 1.
 6. All issue sections contain the required metadata, implementation guidance, tests, and acceptance criteria.
 7. The visual treatment is consistent with existing pre-mortem documents when those documents exist.
-8. The document is static, semantic, accessible, self-contained, and printable.
-9. No unsupported claims are stated as facts.
-10. No em dash character appears anywhere in the HTML.
-11. Validation has completed successfully.
+8. The document is static, semantic, accessible, and printable. Its content remains meaningful if the shared CSS or optional JavaScript is unavailable.
+9. The single stylesheet provides Basic, Minimal, and Full configurations, each with System, Light, and Dark color modes.
+10. Appearance controls default to Basic and System, and the shared script persists and restores them safely between sessions.
+11. All 20 issues have whole-issue copy controls and progress selectors that remain aligned with the TOC and persist independently for this report.
+12. No unsupported claims are stated as facts.
+13. No em dash character appears anywhere in the HTML.
+14. Validation has completed successfully.
 
 # Failure Handling
 
