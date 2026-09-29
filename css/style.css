@@ -124,6 +124,16 @@ select:focus-visible,
 .report-title { margin: 0 0 0.5rem; color: var(--header-color); line-height: 1.15; }
 .report-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin: 0.75rem 0 0; color: var(--header-meta-color); }
 .report-header a { color: var(--header-meta-color); }
+.report-attribution { display: grid; gap: 0.55rem; margin-block: 1rem; padding-block: 0.6rem 1rem; border-block: 1px solid var(--border-color); }
+.report-attribution h2 { margin: 0; color: var(--header-color); font-size: 1.15rem; }
+.report-attribution-fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.25rem 0.7rem; margin: 0; color: var(--header-meta-color); }
+.report-attribution-fields dt { font-weight: 700; }
+.report-attribution-fields dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.company-profile { margin-block-start: 1rem; padding: 1rem; border: 1px solid var(--border-color); border-inline-start: 0.3rem solid var(--accent-color); border-radius: var(--corner-radius); background: var(--surface-background); color: var(--text-color); box-shadow: var(--card-shadow); }
+.company-profile h2 { margin: 0 0 0.4rem; color: var(--heading-color); font-size: 1.2rem; }
+.company-profile p { margin-block: 0.35rem; }
+.company-profile a { color: var(--link-color); }
+.company-services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.3rem 1.5rem; margin-block: 0.55rem; padding-inline-start: 1.25rem; }
 .report-main { padding-block: 1.5rem 3rem; }
 .report-main > section { margin-block: var(--section-space); }
 .report-footer { padding-block: 1rem 2rem; border-top: 1px solid var(--border-color); background: var(--footer-background); color: var(--footer-color); }
@@ -355,6 +365,7 @@ pre code { color: inherit; font-size: 0.9em; }
 :root[data-report-style="minimal"] .issue[data-issue-kind="core"] { border-inline-start-width: 3px; }
 :root[data-report-style="minimal"] .risk-table-wrap { border-inline: 0; border-radius: 0; }
 :root[data-report-style="minimal"] .report-preferences { border-inline: 0; border-radius: 0; }
+:root[data-report-style="minimal"] .company-profile { padding-inline: 0; border: 0; border-block: 1px solid var(--border-color); border-radius: 0; background: transparent; box-shadow: none; }
 
 :root[data-report-style="full"] .report-header {
   width: 100%;
@@ -364,6 +375,8 @@ pre code { color: inherit; font-size: 0.9em; }
 }
 :root[data-report-style="full"] .report-header h1,
 :root[data-report-style="full"] .report-title { max-width: 22ch; font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.08; letter-spacing: -0.025em; }
+:root[data-report-style="full"] .report-attribution { padding-block: 1rem; }
+:root[data-report-style="full"] .company-profile { padding: clamp(1rem, 2vw, 1.35rem); }
 :root[data-report-style="full"] .report-main { padding-block: 2rem 3.5rem; }
 :root[data-report-style="full"] .report-footer { padding: 1.5rem max(1rem, calc((100vw - var(--report-width)) / 2)); }
 :root[data-report-style="full"] .report-summary,
@@ -495,6 +508,9 @@ pre code { color: inherit; font-size: 0.9em; }
   .report-main { padding-block: 1rem 2rem; }
   .issue-fields { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
   .issue-fields dd { margin-bottom: 0.55rem; }
+  .report-attribution-fields { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
+  .report-attribution-fields dd { margin-bottom: 0.45rem; }
+  .company-services { grid-template-columns: minmax(0, 1fr); }
   .risk-table { min-width: 48rem; }
   .report-preferences { align-items: stretch; }
   .report-preferences label, .report-preferences select { width: 100%; }
@@ -524,6 +540,9 @@ pre code { color: inherit; font-size: 0.9em; }
   .report-header, .report-main, .report-footer { width: auto !important; max-width: none; margin: 0; }
   .report-header, :root[data-report-style="full"] .report-header { padding: 0 0 0.5rem; border-bottom: 1px solid #000000; background: #ffffff !important; color: #000000 !important; }
   .report-header h1, .report-title, .report-header p, .report-header a, h1, h2, h3, h4 { color: #000000 !important; }
+  .report-attribution { border-color: #555555; }
+  .company-profile { border-color: #555555; background: #ffffff !important; color: #000000 !important; box-shadow: none; }
+  .company-profile h2, .company-profile a { color: #000000 !important; }
   .report-main { padding: 0.5rem 0; }
   .report-main > section { margin-block: 1rem; }
   .report-summary, .scope-notes, .issue { background: #ffffff !important; color: #000000 !important; box-shadow: none; }

@@ -31,7 +31,7 @@ Generated HTML must load these exact raw GitHub URLs:
 - `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css`
 - `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`
 
-Use one stylesheet link to `style.css` and one deferred script element for `code.js`. Do not add another stylesheet, use relative asset paths, or substitute different URLs. The three visual styles are configurations inside `style.css`, selected through `data-report-style="basic|minimal|full"` on `<html>`, not separate files.
+Use one stylesheet link to `style.css` and one deferred script element for `code.js`. Do not add another stylesheet, use relative asset paths, or substitute different URLs. These are the sole CSS and JavaScript sources for every generated HTML document, for every style and interaction. Do not add inline CSS, inline JavaScript, local CSS or JavaScript files, alternate asset URLs, or other runtime dependencies. The three visual styles are configurations inside `style.css`, selected through `data-report-style="basic|minimal|full"` on `<html>`, not separate files.
 
 Generated reports default to Basic styling and System color mode. Include accessible style and color-mode selectors with Basic, Minimal, and Full & complete style options, and System, Light, and Dark options. `js/code.js` wires the controls to the root data attributes. System mode follows `prefers-color-scheme`; explicit Light and Dark modes override it.
 
@@ -47,7 +47,8 @@ Do not add external fonts, images, libraries, trackers, analytics, or other netw
 
 Both report-generation prompts must specify compatible semantic HTML and these stable classes and data attributes:
 
-- A document `<header class="report-header">`, `<main class="report-main">`, and `<footer class="report-footer">`. Mark the document title `.report-title` and related branch, identity, or timestamp metadata `.report-meta` where present.
+- A document `<header class="report-header">`, `<main class="report-main">`, and `<footer class="report-footer">`. Mark the document title `.report-title` and related branch, identity, or timestamp metadata `.report-meta` where present. In `<head>`, include a descriptive title, `<meta name="author" content="Kyle Rode, myTech.Today">`, `<meta name="generator" content="myTech.Today prompt-refined report workflow">`, `<meta name="report-repository" content="...">`, `<meta name="report-repository-url" content="...">` when verified, and `<meta name="report-repository-author" content="...">` for the reviewed project's evidence-backed author or maintainer. Use `Not identified from available repository evidence` when project authorship cannot be established. In the visible report header, identify the reviewed repository (link to its verified URL when known), branch or revision, project author/maintainer, and the evidence used to establish authorship. Also identify the report author as Kyle Rode using myTech.Today's prompt-refined workflow. Distinguish report author, project author, repository owner, and recent committers. Do not infer project authorship from a commit alone.
+- Include a visible `.company-profile` in the report header for myTech.Today, described as a Midwestern technology company. Use the approved concise service list: managed IT and remote support; computer and network support; backup and recovery; and web development and software services. Include links to `https://mytech.today` and `mailto:support@mytech.today`. Keep this company attribution distinct from the reviewed repository's authorship.
 - Summary content in `.report-summary` and scope or limitation content in `.scope-notes`.
 - A risk register in `.risk-register`, with a horizontally scrollable, keyboard-focusable `.risk-table-wrap` and semantic table `.risk-table` when a risk table is required.
 - A group of findings in `.issue-list`. Each finding is an `<article class="issue">` with a stable unique ID, a visible heading using `.issue-title`, and a `data-issue-kind` value that matches the prompt's kind taxonomy in lowercase kebab case.
@@ -68,12 +69,14 @@ When changing either report-generation prompt or a shared asset, inspect all rel
 
 - Exact raw URLs, one stylesheet link to `style.css`, one deferred script reference, and no relative paths or additional theme stylesheets.
 - Matching shared selectors in `style.css` for Basic, Minimal, and Full and for System, Light, and Dark; appearance controls must not change the stylesheet URL.
+- `.report-attribution`, `.company-profile`, and `.company-services` remain readable in all three styles and color modes, at narrow widths, and in print.
 - Default Basic/System settings, allowlisted saved preferences, persistence across reloads, and safe behavior if browser storage is unavailable.
 - Exactly one TOC status indicator and one persistent progress selector per issue; article status, visible badge, TOC status, and stored value must remain synchronized for all three allowed states.
 - Whole-issue copy includes its issue number, all issue content, and implementation prompt, while excluding injected action controls. Verify clipboard success, unavailable/rejected clipboard fallback, and duplicate-initialization protection.
 - Report-scoped progress persistence, invalid saved values falling back to Incomplete, and accessible behavior when storage reads or writes fail.
 - No generated-HTML instruction that requires embedded CSS, inline JavaScript, or inline event handlers.
 - Copy success and manual-copy fallback behavior, with prompt text preserved and duplicate controls prevented.
+- Repository and evidence-backed author metadata appears in both `<head>` and the visible report header; missing authorship is labeled rather than guessed. The visible myTech.Today profile includes its service list, website, and support email.
 - Responsive narrow layouts, long prompt and code wrapping, visible keyboard focus, print output, and readable HTML with CSS and JavaScript disabled.
 - Preserved issue counts, classifications, required fields, output paths, and safe no-overwrite rules for each prompt.
 - Clean diffs and no accidental em dash characters where a prompt explicitly forbids them in generated output.

@@ -102,7 +102,11 @@ Use only these exact raw GitHub URLs in generated HTML:
 
 Include exactly one `<link rel="stylesheet">` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css` and exactly one deferred external `<script>` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`. There is only one stylesheet file. Do not use relative asset paths or add alternate stylesheet links.
 
-The generated document must not contain `<style>` blocks, `style` attributes, inline `<script>` blocks, inline event handlers, duplicated JavaScript, or JavaScript in attributes. The only permitted runtime assets are the single stylesheet and script above. Do not add external fonts, images, libraries, trackers, analytics, or other network dependencies. Local asset files do not prove that the raw URLs are available: availability depends on the files being committed and published to the `main` branch. Do not claim publication or availability without verification.
+The generated document must not contain `<style>` blocks, `style` attributes, inline `<script>` blocks, inline event handlers, duplicated JavaScript, or JavaScript in attributes. The only permitted CSS and JavaScript sources for every style and interaction are the single stylesheet and script above. Do not add local or alternate CSS/JavaScript files, other asset URLs, or external fonts, images, libraries, trackers, analytics, or other network dependencies. Local asset files do not prove that the raw URLs are available: availability depends on the files being committed and published to the `main` branch. Do not claim publication or availability without verification.
+
+Every generated report must identify the report author and the reviewed repository and its author or maintainer in document metadata and the visible report header. In `<head>`, include `<meta name="author" content="Kyle Rode, myTech.Today">`, `<meta name="generator" content="myTech.Today prompt-refined report workflow">`, `<meta name="report-repository" content="...">`, `<meta name="report-repository-url" content="...">` when a repository URL is verified, and `<meta name="report-repository-author" content="...">` with the evidence-backed author or maintainer of the reviewed project. Escape metadata values correctly. In `<header class="report-header">`, identify the reviewed repository and verified URL when known, branch or revision, project author or maintainer, and the evidence source for that attribution. Separately identify the report author as Kyle Rode using myTech.Today's prompt-refined workflow. Distinguish report author, project author, repository owner, and recent committers. A commit author alone is not proof of project authorship. If no reliable project authorship evidence is available, use `Not identified from available repository evidence` in `report-repository-author` and the visible project-author field; do not guess.
+
+Include this concise company profile in the visible report header, separate from the reviewed project's authorship: `myTech.Today is a Midwestern technology company.` List these services: managed IT and remote support; computer and network support; backup and recovery; web development and software services. Include working links to `https://mytech.today` and `mailto:support@mytech.today`. Do not add other business claims or contact details.
 
 Initialize the document root with `data-report-style="basic"` and `data-color-mode="system"`. The single `style.css` must define three distinct configurations: `basic`, `minimal`, and `full`. Add an accessible, initially hidden appearance fieldset in the report header with a labelled style select (`basic`, `minimal`, `full`) and a labelled color-mode select (`system`, `light`, `dark`). Its visible option labels must be `Basic`, `Minimal`, `Full & complete style`, `System`, `Light`, and `Dark`. Select Basic and System by default. Include a `.preferences-status` live region and a `<noscript>` explanation. The shared script must reveal the controls only after they are initialized.
 
@@ -112,7 +116,7 @@ Persist issue progress separately for this report. Use the key `prompt-refined:i
 
 Use this shared semantic markup and selector contract in the generated report:
 
-- `<header class="report-header">`, `<main class="report-main">`, and `<footer class="report-footer">` for the document landmarks. Use `.report-title` for the document title and `.report-meta` for repository identity, branch, and timestamp metadata.
+- `<header class="report-header">`, `<main class="report-main">`, and `<footer class="report-footer">` for the document landmarks. Use `.report-title` for the document title and `.report-meta` for report author, repository identity, branch, revision, evidence-backed project author or maintainer, attribution evidence, and timestamp metadata. Include a `.report-attribution` section that identifies the reviewed repository and its author/maintainer, and a separate byline identifying report author Kyle Rode and the myTech.Today prompt-refined workflow. Include the `.company-profile` section with the required myTech.Today description, service list, website, and support email. Keep report author, company information, and reviewed-project authorship distinct.
 - Set `data-report-style="basic"` and `data-color-mode="system"` on `<html>` in the static file. Include `<fieldset class="report-preferences" data-report-preferences hidden>` in the header. It contains a `<select data-report-style-control>` with `basic`, `minimal`, and `full` values and a `<select data-color-mode-control>` with `system`, `light`, and `dark` values. Associate visible labels with both controls and use the option labels specified above. Include `<p class="preferences-status" data-preferences-status role="status" aria-live="polite"></p>`, `<p class="issue-progress-storage-status" data-issue-progress-status role="status" aria-live="polite"></p>`, and a `<noscript>` explanation that the page uses Basic styling and follows the system color preference. Also explain that copy and progress controls require JavaScript while report text remains available.
 - `.report-summary` for the executive summary, `.scope-notes` for review scope and limitations, and `.risk-register` for the prioritized risk table.
 - A table of contents in `<nav class="issue-toc" aria-label="Table of contents">`, with one `.issue-toc-link` linking to each issue article. Each link contains a visible `<span class="issue-toc-status" data-issue-progress-indicator="issue-01" data-progress="incomplete">Incomplete</span>` whose issue ID matches its article.
@@ -215,9 +219,10 @@ Create one valid HTML5 document in this order:
    - UTF-8 character encoding
    - Responsive viewport metadata
    - Descriptive title that includes the detected project name and generation timestamp
+   - Repository and author metadata as specified in the shared attribution contract
    - Exactly one stylesheet link to the default shared `style.css` raw URL above
 4. `<body>` containing:
-   - Header with class `report-header`, title, generation timestamp, detected repository identity, branch, purpose, and the accessible appearance controls specified above
+   - Header with class `report-header`, title, generation timestamp, detected repository identity, branch or revision, evidence-backed project author/maintainer and attribution evidence, the required myTech.Today company profile, purpose, and the accessible appearance controls specified above
    - Main landmark with class `report-main`
    - Executive summary in a section with class `report-summary`
    - Review scope and methodology
@@ -545,7 +550,7 @@ Before completing the task, validate all of the following:
 15. No issue is duplicated or merely a narrower restatement of another issue.
 16. No unsupported file, route, API, service, or behavior is presented as fact.
 17. The file contains no em dash character.
-18. The document references exactly one permitted shared stylesheet URL and one deferred shared script URL, with no other runtime dependencies.
+18. The document references exactly one permitted shared stylesheet URL and one deferred shared script URL as its only CSS and JavaScript sources, with no other runtime dependencies; its head and visible header contain repository and evidence-backed author metadata plus the required myTech.Today profile.
 19. The document remains understandable with CSS disabled.
 20. The document uses the shared selector contract, one stylesheet link to the exact `style.css` raw URL, and one deferred script link to the exact `code.js` raw URL.
 21. The document is readable at mobile and desktop widths.
@@ -577,7 +582,7 @@ The task is complete only when:
 5. The remaining 5 are additional, high-value, non-overlapping issues, none classified as both Priority P1 and Severity 1.
 6. All issue sections contain the required metadata, implementation guidance, tests, and acceptance criteria.
 7. The visual treatment is consistent with existing pre-mortem documents when those documents exist.
-8. The document is static, semantic, accessible, and printable. Its content remains meaningful if the shared CSS or optional JavaScript is unavailable.
+8. The document is static, semantic, accessible, and printable. Its content remains meaningful if the shared CSS or optional JavaScript is unavailable. Its head and visible header identify the reviewed repository and evidence-backed author/maintainer, and the visible header includes the required myTech.Today services and contact links.
 9. The single stylesheet provides Basic, Minimal, and Full configurations, each with System, Light, and Dark color modes.
 10. Appearance controls default to Basic and System, and the shared script persists and restores them safely between sessions.
 11. All 20 issues have whole-issue copy controls and progress selectors that remain aligned with the TOC and persist independently for this report.
