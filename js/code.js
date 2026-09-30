@@ -23,14 +23,122 @@
     button.setAttribute("aria-describedby", statusId);
   }
 
-  function initializeAppearanceControls() {
-    const fieldset = document.querySelector("[data-report-preferences]");
-    if (!fieldset || fieldset.hasAttribute("data-preferences-ready")) return;
+  function announceInitializationFailure(config) {
+    let status = document.querySelector(config.selector);
+    if (!status) {
+      status = document.createElement("p");
+      status.className = config.className;
+      status.setAttribute(config.attribute, "");
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      const host = document.querySelector(config.hostSelector) || document.body;
+      if (host) host.append(status);
+    }
+    status.textContent = config.message;
+  }
 
-    const styleControl = fieldset.querySelector("[data-report-style-control]");
-    const modeControl = fieldset.querySelector("[data-color-mode-control]");
-    const status = fieldset.querySelector("[data-preferences-status]");
-    if (!styleControl || !modeControl || !status) return;
+  function runInitializer(initializer, failureConfig) {
+    try {
+      initializer();
+    } catch {
+      if (failureConfig) {
+        announceInitializationFailure(failureConfig);
+      }
+    }
+  }
+
+  function initializeAppearanceControls() {
+    let fieldset = document.querySelector("[data-report-preferences], .report-preferences");
+    if (!fieldset) {
+      fieldset = document.createElement("fieldset");
+      fieldset.className = "report-preferences";
+      fieldset.setAttribute("data-report-preferences", "");
+      const header = document.querySelector(".report-header") || document.body;
+      const title = header.querySelector(".report-title");
+      if (title) title.insertAdjacentElement("afterend", fieldset);
+      else header.prepend(fieldset);
+    }
+    if (fieldset.hasAttribute("data-preferences-ready")) {
+      fieldset.hidden = false;
+      fieldset.disabled = false;
+      fieldset.querySelectorAll("[data-report-style-control], [data-color-mode-control]")
+        .forEach((control) => { control.disabled = false; });
+      return;
+    }
+
+    fieldset.classList.add("report-preferences");
+    fieldset.setAttribute("data-report-preferences", "");
+    fieldset.disabled = true;
+
+    let legend = fieldset.querySelector("legend");
+    if (!legend) {
+      legend = document.createElement("legend");
+      legend.textContent = "Report appearance";
+      fieldset.prepend(legend);
+    }
+
+    function ensureSelect(attribute, labelText, options) {
+      let control = fieldset.querySelector(`[${attribute}]`);
+      if (!control) {
+        const label = document.createElement("label");
+        const caption = document.createElement("span");
+        caption.textContent = labelText;
+        control = document.createElement("select");
+        control.setAttribute(attribute, "");
+        label.append(caption, control);
+        fieldset.append(label);
+      } else if (!control.closest("label")) {
+        const associatedLabel = control.id && Array.from(fieldset.querySelectorAll("label[for]")).find((label) => (
+          label.htmlFor === control.id
+        ));
+        if (!associatedLabel) {
+          const label = document.createElement("label");
+          const caption = document.createElement("span");
+          caption.textContent = labelText;
+          control.before(label);
+          label.append(caption, control);
+        }
+      }
+
+      control.replaceChildren();
+      options.forEach(([value, text]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = text;
+        control.append(option);
+      });
+      control.setAttribute("aria-label", labelText);
+      control.disabled = true;
+      return control;
+    }
+
+    const styleControl = ensureSelect("data-report-style-control", "Report style", [
+      ["basic", "Basic"],
+      ["minimal", "Minimal"],
+      ["full", "Full & complete style"]
+    ]);
+    const modeControl = ensureSelect("data-color-mode-control", "Color mode", [
+      ["system", "System"],
+      ["light", "Light"],
+      ["dark", "Dark"]
+    ]);
+
+    let status = fieldset.querySelector("[data-preferences-status]");
+    if (!status) {
+      status = document.createElement("p");
+      status.className = "preferences-status";
+      status.setAttribute("data-preferences-status", "");
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      fieldset.append(status);
+    }
+    status.classList.add("preferences-status");
+    status.setAttribute("data-preferences-status", "");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    if (!status.id) status.id = "report-preferences-status";
+    styleControl.setAttribute("aria-describedby", status.id);
+    modeControl.setAttribute("aria-describedby", status.id);
 
     const root = document.documentElement;
     let style = "basic";
@@ -87,6 +195,9 @@
     styleControl.addEventListener("change", savePreferences);
     modeControl.addEventListener("change", savePreferences);
     fieldset.setAttribute("data-preferences-ready", "true");
+    fieldset.disabled = false;
+    styleControl.disabled = false;
+    modeControl.disabled = false;
     fieldset.hidden = false;
 
     if (storageReadFailed) {
@@ -99,8 +210,12 @@
   }
 
   function getIssueActions(article) {
-    let actions = article.querySelector("[data-issue-actions]");
-    if (actions) return actions;
+    let actions = article.querySelector("[data-issue-actions], .issue-actions");
+    if (actions) {
+      actions.classList.add("issue-actions");
+      actions.setAttribute("data-issue-actions", "");
+      return actions;
+    }
 
     actions = document.createElement("div");
     actions.className = "issue-actions";
@@ -149,11 +264,65 @@
     });
   }
 
+  function ensureIssueTocIndicators(articles) {
+    let toc = document.querySelector(".issue-toc");
+    if (!toc) {
+      toc = document.createElement("nav");
+      toc.className = "issue-toc";
+      toc.setAttribute("aria-label", "Table of contents");
+      const issueList = document.querySelector(".issue-list");
+      if (issueList) issueList.before(toc);
+      else if (articles[0]) articles[0].before(toc);
+      else (document.querySelector(".report-main") || document.body).prepend(toc);
+    }
+    toc.setAttribute("aria-label", "Table of contents");
+
+    articles.forEach((article) => {
+      if (!article.id) return;
+
+      let link = Array.from(toc.querySelectorAll("a")).find((candidate) => (
+        candidate.getAttribute("href") === `#${article.id}`
+      ));
+      if (!link) {
+        link = document.createElement("a");
+        link.className = "issue-toc-link";
+        link.setAttribute("href", `#${article.id}`);
+        const issueNumber = article.querySelector(".issue-number");
+        const issueTitle = article.querySelector(".issue-title");
+        const label = document.createElement("span");
+        label.className = "issue-toc-title";
+        label.textContent = [
+          issueNumber ? issueNumber.textContent.trim() : article.id,
+          issueTitle ? issueTitle.textContent.trim() : ""
+        ].filter(Boolean).join(" ");
+        link.append(label);
+        toc.append(link);
+      }
+
+      let indicator = Array.from(link.querySelectorAll("[data-issue-progress-indicator], .issue-toc-status"))
+        .find((candidate) => candidate.getAttribute("data-issue-progress-indicator") === article.id);
+      if (!indicator) {
+        indicator = Array.from(link.querySelectorAll(".issue-toc-status"))[0] || null;
+      }
+      if (!indicator) {
+        indicator = document.createElement("span");
+        link.append(indicator);
+      }
+      indicator.classList.add("issue-toc-status");
+      indicator.setAttribute("data-issue-progress-indicator", article.id);
+      if (!validProgressStates.includes(indicator.getAttribute("data-progress"))) {
+        indicator.setAttribute("data-progress", "incomplete");
+      }
+      if (!indicator.textContent.trim()) indicator.textContent = "Incomplete";
+    });
+  }
+
   function initializeIssueProgressControls() {
     const articles = Array.from(document.querySelectorAll(".issue"));
     if (!articles.length) return;
 
     const status = getProgressStatus();
+    ensureIssueTocIndicators(articles);
     const indicators = new Map();
     document.querySelectorAll("[data-issue-progress-indicator]").forEach((indicator) => {
       const issueId = indicator.getAttribute("data-issue-progress-indicator");
@@ -199,7 +368,7 @@
       }
 
       const actions = getIssueActions(article);
-      let control = actions.querySelector("[data-issue-progress-control]");
+      let control = actions.querySelector("select[data-issue-progress-control]");
       if (!control) {
         const label = document.createElement("label");
         label.className = "issue-progress-control";
@@ -218,7 +387,26 @@
 
         label.append(labelText, control);
         actions.append(label);
+      } else if (!control.closest("label")) {
+        const label = document.createElement("label");
+        const labelText = document.createElement("span");
+        label.classList.add("issue-progress-control");
+        labelText.textContent = "Progress";
+        control.before(label);
+        label.append(labelText, control);
       }
+      control.closest("label")?.classList.add("issue-progress-control");
+      control.disabled = true;
+      control.replaceChildren();
+      validProgressStates.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = progressLabels[value];
+        control.append(option);
+      });
+      const issueNumber = article.querySelector(".issue-number");
+      const accessibleIssueLabel = issueNumber ? issueNumber.textContent.trim() : issueId.replaceAll("-", " ");
+      control.setAttribute("aria-label", `Progress for ${accessibleIssueLabel}`);
 
       let stateBadge = actions.querySelector("[data-issue-progress-state]");
       if (!stateBadge) {
@@ -227,6 +415,8 @@
         stateBadge.setAttribute("data-issue-progress-state", "");
         actions.append(stateBadge);
       }
+      stateBadge.classList.add("issue-progress-state");
+      stateBadge.setAttribute("data-issue-progress-state", "");
 
       control.value = state;
       setIssueProgress(article, state, indicators);
@@ -254,6 +444,7 @@
         });
         article.setAttribute("data-issue-progress-ready", "true");
       }
+      control.disabled = false;
     });
 
     if (storageReadFailed) {
@@ -368,8 +559,45 @@
     });
   }
 
-  initializeAppearanceControls();
-  initializeIssueProgressControls();
-  initializeIssueCopyControls();
-  initializeCopyControls();
+  let initializationStarted = false;
+
+  function initializeReportControls() {
+    if (initializationStarted) return;
+    initializationStarted = true;
+
+    runInitializer(initializeAppearanceControls, {
+      selector: "[data-preferences-status]",
+      className: "preferences-status",
+      attribute: "data-preferences-status",
+      hostSelector: ".report-preferences, .report-header",
+      message: "Appearance controls could not initialize. Reload the report and check that the shared script is available."
+    });
+    runInitializer(initializeIssueProgressControls, {
+      selector: "[data-issue-progress-status]",
+      className: "issue-progress-storage-status",
+      attribute: "data-issue-progress-status",
+      hostSelector: ".report-header, .report-main",
+      message: "Issue progress controls could not initialize. Reload the report and check that the shared script is available."
+    });
+    runInitializer(initializeIssueCopyControls, {
+      selector: "[data-issue-copy-initialization-status]",
+      className: "copy-status",
+      attribute: "data-issue-copy-initialization-status",
+      hostSelector: ".report-header, .report-main",
+      message: "Issue-copy controls could not initialize. Reload the report and check that the shared script is available."
+    });
+    runInitializer(initializeCopyControls, {
+      selector: "[data-prompt-copy-initialization-status]",
+      className: "copy-status",
+      attribute: "data-prompt-copy-initialization-status",
+      hostSelector: ".report-main, .report-header",
+      message: "Implementation-prompt copy controls could not initialize. Reload the report and check that the shared script is available."
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeReportControls, { once: true });
+  } else {
+    initializeReportControls();
+  }
 })();

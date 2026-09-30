@@ -1,0 +1,26 @@
+{
+  "name": "prompt-refined",
+  "version": "1.0.0",
+  "description": "Three independent assets for improving prompt quality. Use them on their own — they are not chained.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mytech-today-now/prompt-refined.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mytech-today-now/prompt-refined/issues"
+  },
+  "homepage": "https://github.com/mytech-today-now/prompt-refined#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.3"
+  }
+}

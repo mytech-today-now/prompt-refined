@@ -299,6 +299,7 @@ pre code { color: inherit; font-size: 0.9em; }
   color: var(--text-color);
 }
 .report-preferences[hidden] { display: none; }
+.report-preferences:disabled { color: var(--text-color); opacity: 1; }
 .report-preferences legend { padding-inline: 0.35rem; color: var(--heading-color); font-weight: 700; }
 .report-preferences label { display: grid; gap: 0.25rem; color: var(--text-color); font-weight: 650; }
 .report-preferences select {
@@ -310,6 +311,13 @@ pre code { color: inherit; font-size: 0.9em; }
   background: var(--control-background);
   color: var(--control-color);
   font: inherit;
+}
+.report-preferences select:disabled,
+.issue-progress-control select:disabled {
+  background: var(--control-background);
+  color: var(--control-color);
+  opacity: 1;
+  cursor: not-allowed;
 }
 .preferences-status { flex-basis: 100%; min-width: 0; margin: 0; color: var(--muted-color); }
 .preferences-fallback { margin-block: 0.75rem 0; color: var(--header-meta-color); }

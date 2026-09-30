@@ -6,8 +6,9 @@ generate a detatiled, verbose, accurate 'description' of the work necessary to r
 
 
 
- need to be turned into a series of individual AI prompts in a new html file 'pre-mortem-2026-09-07-cleanup.html', with the prompts post-processed with the Template.  Each item/issue will have the following structure per container in the html file:""
-Issue [#] / 16
+ need to be turned into a series of individual AI prompts in a new html file './ai-prompts/pre-mortem_[YYYY]-[MM]-[DD]_[HH]-[MM]-[SS].html', with the prompts post-processed with the Template.  The html file should retain changes so that they arre persistent between session.The html header should have controls for the css theme style (from:"https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css") and the 'status' & sytem/light/dark mode (from:"https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js").  The TOC should have dynamic js update to show the 'status' of the issue, when it is updated by the user.  The issue style should change it indicate the different status of the issue, perhaps by color coding.  The 'status' changes should persist between user sessions.  Each issue should have a 'JSON' button that copies the entire Issue into a 'json' object that is copied to the clipboard.  The entire page also has a 'JSON' button at the top of the page, that copies the entire document as a structured json object to the clipboard.
+ Each item/issue will have the following structure per issue container in the html file:""
+Issue [#] / 20  [Status Control "Not Complete [default]" | "In-Progress" | "Completed"] [Copy control "Copy"] [JSON]
 Title:
 DTM: 
 Kind:
@@ -18,7 +19,7 @@ Impacted area:
 Failure mode:
 Evidence or rationale:
 Why this matters:
-Implementation prompt: [This is the main Prompt that drives the refactoring.]
+Implementation prompt: [This is the main Prompt that drives the refactoring.] [Copy control "Copy"]
 Tests (where applicable):
 - Unit Testing:
 - Integration Testing:
