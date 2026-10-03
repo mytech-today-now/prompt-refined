@@ -1,4 +1,4 @@
-Follow the instructions in `Review-the-existing-HTML-report-and-Compare-its-issues-and-gaps-with-the-repository-in-its-current-state.md`.
+Follow the instructions in `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/Review-the-existing-HTML-report-and-Compare-its-issues-and-gaps-with-the-repository-in-its-current-state.md`.
 
 SOURCE_REPORT_PATH: `./ai-prompts/pre-mortem-[YYYY]-[MM]-[DD]-[HH]-[MM]-[SS].html`
 
