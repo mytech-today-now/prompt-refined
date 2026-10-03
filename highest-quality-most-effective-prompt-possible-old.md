@@ -32,7 +32,9 @@ Maintain the original goal and spirit while dramatically improving quality, robu
 ORIGINAL PROMPT:
 """
 
-Generate a new 'double-check.md' AI prom
+Generate a new 'double-check.md' AI prompt that checks the input gap and issues report or json object against the current repo application.  An example of the 'report' is:"C:\GitHub\prompt-refined\ai-prompts\pre-mortem-2026-09-29-22-27-09.html".
+
+The 'double-check.md' AI prompt should generate a new html file, './ai-prompts/[report name (no spaces between words)]-double-check_[YYYY]-[MM]-[DD]_[HH]-[MM]-[SS].html'
 
 """
 
