@@ -344,6 +344,7 @@ Each prompt must tell the implementation agent:
 17. How to verify responsive behavior, accessibility, security, observability, or recovery when applicable.
 18. What rollback or recovery procedure is required for high-risk changes.
 19. What must be included in the implementation agent's final report.
+20. How to use Beads and/or OpenSpec for this finding only when the reviewed repository is configured for that tool and its CLI or agent workflow is available, while keeping the prompt independently actionable.
 
 Do not require the implementation agent to expose private chain-of-thought. Require concise findings, decisions, changed files, test evidence, unresolved risks, and testable assumptions instead.
 
@@ -352,6 +353,21 @@ Keep repository-wide setup instructions out of every issue prompt. Include only 
 # Specialized Implementation Guidance
 
 Apply these rules only where relevant to the issue.
+
+## Beads and OpenSpec work management
+
+These tools organize future implementation of report findings. Do not use them to create or change tracking records while generating the report. Determine availability through read-only inspection of project guidance and repository configuration. A globally available executable alone does not establish that the reviewed repository uses the tool.
+
+For Beads, look for repository Beads state or a configured Beads store and project instructions. For OpenSpec, inspect `openspec/config.yaml`, configured store references, specs, active changes, and generated agent workflow instructions. Check whether the corresponding CLI or agent workflow is available. Report-generation inspection must not install or upgrade either tool, initialize repository configuration, or create, claim, update, close, or archive work items.
+
+Keep every generated implementation prompt independently usable. Preserve its complete issue-specific evidence, remediation, tests, acceptance criteria, and final-report requirements. Add only applicable work-management steps, tied to that issue's report filename, stable `issue-##` identifier, and title. Tell the future implementation agent to recheck the current repository setup and tool availability before use. Do not copy repository-wide setup instructions into each prompt.
+
+- **Beads:** When Beads is configured for the repository and its CLI is available, follow the repository's `AGENTS.md` and run `bd.exe prime` on Windows (`bd prime` elsewhere) if supported. Check local help when command syntax differs. Use the supported `ready`, `list`, and `show` commands to find an existing record for this finding. Match on the report filename, stable `issue-##` identifier, and issue title so records from different dated reports are not confused. Reuse one matching record; otherwise create exactly one Beads issue with the report reference, concise evidence, and acceptance criteria. Treat the Beads ID as distinct from the report's `issue-##` ID. Claim or update the record through the documented workflow, such as `bd.exe update <id> --claim` when supported. Verify a created or selected record with `bd.exe show <id>` on Windows (`bd show <id>` elsewhere) before reporting its ID; an ID printed by a failed or denied create is not proof. Keep the record open if implementation or verification is blocked, and close it only after the code change and acceptance checks are complete. Do not create a parallel Markdown TODO list when Beads is the configured tracker. Include the verified Beads ID and final status in the implementation agent's final report.
+- **OpenSpec:** When OpenSpec is configured for the repository and its CLI or generated agent workflow is available, read the local configuration, schema, relevant specs, and active changes first. Reuse an active change that matches this finding, or create a change scoped to it using the repository's configured workflow. Prefer the current artifact-guided propose/apply workflow (`/opsx:propose` and `/opsx:apply`) or the command aliases and CLI workflow provided for the installed assistant and version. Do not assume legacy subcommands; use local help and project guidance. Ground the proposal, requirements, design, tasks, and validation in the report filename and issue ID, repository evidence, exact code locations, behavior to preserve, tests, and measurable acceptance criteria. Do not let an OpenSpec artifact expand the finding's scope. Verify the implementation with the configured OpenSpec workflow and record the change ID and validation outcome in the final report. Complete or archive the change only after implementation and acceptance checks pass and the repository's workflow calls for it.
+- **When both tools are configured:** Use Beads for issue status and real dependencies, and OpenSpec for the change specification and implementation workflow. Link the OpenSpec change to its Beads issue through a repository-supported field or note. Do not create duplicate records, speculative dependencies, or separate Beads tasks for OpenSpec checklist items unless repository guidance requires that.
+- **When a tool is absent, unconfigured, or unavailable:** Do not install, initialize, upgrade, or reconfigure it. Continue from the issue-specific implementation instructions and report which workflow was unavailable. If a configured tool fails or a record cannot be verified, do not claim that tracking succeeded; keep the work open or its status unconfirmed and describe the failure in the final report.
+
+Do not change the generated report's issue count, classifications, fields, output path, semantic HTML, styling, or controls to add these workflows. Its report-scoped progress selectors remain independent display state and must not be described as synchronized with Beads or OpenSpec.
 
 ## Disabled or unavailable controls
 
@@ -569,6 +585,7 @@ Before completing the task, validate all of the following:
 34. No secrets or sensitive user data appear in the document.
 35. No application or repository file other than the new report was modified.
 36. The header appearance fieldset and all 20 per-issue progress selectors and state badges are present in the static HTML, visible, and disabled before JavaScript initialization; no appearance fieldset is hidden. When browser verification is available, the exact published script URL loads, the appearance fieldset and selects become enabled, and both initialization status messages change. If the remote asset or browser behavior cannot be verified, report it as an unverified release condition and do not claim controls were tested.
+37. Every issue's implementation prompt remains independently actionable and contains only applicable Beads and/or OpenSpec instructions based on repository evidence. It requires future agents to recheck setup and CLI or workflow availability, avoid installing or initializing tools, verify tracker records, and report identifiers and status truthfully. The report's progress controls are not presented as synchronized with either tool.
 
 If a validation fails, correct the document and repeat validation before finishing.
 
@@ -590,6 +607,7 @@ The task is complete only when:
 12. No unsupported claims are stated as facts.
 13. No em dash character appears anywhere in the HTML.
 14. Validation has completed successfully.
+15. Each implementation prompt uses Beads and/or OpenSpec only when the reviewed repository is configured for the tool and its CLI or agent workflow is available, without changing the report's existing structure or progress-control behavior.
 
 # Failure Handling
 
