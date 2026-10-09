@@ -36,7 +36,17 @@ ORIGINAL PROMPT:
 
 <<< SOFTWARE DEVELOPMENT REQUEST START >>>
 
-[Insert the user's software issue, defect, gap, feature request, or refactoring request here]
+[I have a resume folder:""C:\Users\kyle_\OneDrive\Documents\resume & cover letters"" where the latest resumes are the most current.  The retail resume for kyle is a fake resume, so disregard it.
+
+Go through the email client looking for emails with links to jobs for jobs that in 74% match the  available resumes.  Then craft a new resume for the new position, based on the resumes in the folder.  Use this resume to create a cover letter and add both the cover letter and resume to the job position(s).
+
+Set up a daily schedule for this job to be run at 6 different points in the day.
+
+The new resume and cover letter should be the best generated cover letter and resume for the position being applied for using actual data from the resumes in the folder.  Ignore Anna's and Kat's resumes.
+
+[use the web browser to navigate the job posting site, where through a job board or the original company or a third party listing.  Use the browser as necessary to facilitate the entire process.]
+
+]
 
 <<< SOFTWARE DEVELOPMENT REQUEST END >>>
 

@@ -2,4 +2,4 @@ Follow the instructions in `https://raw.githubusercontent.com/mytech-today-now/p
 
 SOURCE_REPORT_PATH: `./ai-prompts/pre-mortem-[YYYY]-[MM]-[DD]-[HH]-[MM]-[SS].html`
 
-Compare that report with the current repository working tree. Create the required new dated report, preserving existing files and following the instructions in the Markdown file.
+Compare that report with the current repository working tree. Create the required new dated report, preserving existing files and following the instructions in the Markdown file.  If the total number of issues in the final report doesn't meet the requirements of the .md file, ignore the issue and proceed with the new document generation.
