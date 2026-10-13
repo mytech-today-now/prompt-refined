@@ -130,6 +130,14 @@ Use this shared semantic markup and selector contract in the generated report:
 
 The single stylesheet must support all shared classes and data attributes in the Basic, Minimal, and Full configurations and each System, Light, and Dark color mode. It must provide responsive layouts, readable long text and code, accessible contrast, visible keyboard focus wherever controls appear, visually distinguishable issue progress states and TOC badges, and print rules that do not clip or truncate content. Keep the current progress label visible in print while hiding interactive buttons and selectors. Do not rely on color alone for risk classifications or progress. Keep semantic content understandable if CSS or JavaScript is disabled or cannot be fetched.
 
+## Optional report-control diagnostics
+
+The shared script may emit console diagnostics only when the generated report URL opts in with `?debug=1`. Enable them only when URL parsing succeeds and exactly one `debug` query parameter has the value `1`. A missing parameter, any other value, duplicate `debug` parameters, malformed URL state, or parsing failure must leave diagnostics disabled. Fail closed if the URL or query parser is unavailable or throws. The switch works by adding the query parameter to the report URL; generated HTML must not gain a script attribute, inline code, alternate asset reference, or other debug markup.
+
+When enabled, emit concise structured console messages prefixed with `[prompt-refined:report-debug]`. Include script execution and document readiness, whether startup waits for `DOMContentLoaded` or initializes immediately, initialization start, success, and failure for appearance controls, issue progress, whole-issue copy, and implementation-prompt copy, plus safe counts or enabled-state indicators for their controls. Note duplicate initialization attempts when they occur. Guard missing or throwing console methods so diagnostics cannot interrupt controls. Keep each feature isolated so one initialization failure cannot prevent later features from initializing. A feature failure must still update its matching accessible status region whether diagnostics are enabled or disabled.
+
+Never log report or implementation-prompt text, clipboard contents, localStorage values, credentials, tokens, the full page URL, query strings, or unfiltered exception stacks. If failure metadata is logged, limit it to safe values such as the feature name and error type. The page cannot log failures that happen before the shared script executes, including a script download failure. Investigate those with browser network or console evidence. Verify the exact published shared-script URL before claiming that dependency is available; otherwise report it as an unverified release condition.
+
 ## Diagnostics
 
 1. Run existing read-only diagnostics, builds, linters, typechecks, tests, or application checks when practical and safe.
@@ -518,6 +526,8 @@ Separate tests into:
 - Regression tests that specifically protect the proposed fix
 - Additional baseline tests that establish or strengthen surrounding behavior
 
+When reviewing report-control initialization or diagnostics, cover opt-in `?debug=1` and fail-closed cases including no switch, `debug=0`, `debug=true`, duplicate parameters, malformed URL state, and URL parsing failure. Exercise startup while the document is loading and after it is ready. Inject a controlled failure into each feature and verify its accessible failure status, safe diagnostic, and continued initialization of the other features. Reinitialize the script and check that controls and listeners are not duplicated. Verify missing or throwing console methods do not block controls and that diagnostic output contains none of the prohibited report, prompt, storage, URL, query, clipboard, credential, token, or stack data. Use a local fixture or focused harness; unrelated external-navigation samples do not prove this behavior.
+
 # Writing Standards
 
 1. Write detailed, technically actionable content without repetition.
@@ -586,6 +596,9 @@ Before completing the task, validate all of the following:
 35. No application or repository file other than the new report was modified.
 36. The header appearance fieldset and all 20 per-issue progress selectors and state badges are present in the static HTML, visible, and disabled before JavaScript initialization; no appearance fieldset is hidden. When browser verification is available, the exact published script URL loads, the appearance fieldset and selects become enabled, and both initialization status messages change. If the remote asset or browser behavior cannot be verified, report it as an unverified release condition and do not claim controls were tested.
 37. Every issue's implementation prompt remains independently actionable and contains only applicable Beads and/or OpenSpec instructions based on repository evidence. It requires future agents to recheck setup and CLI or workflow availability, avoid installing or initializing tools, verify tracker records, and report identifiers and status truthfully. The report's progress controls are not presented as synchronized with either tool.
+38. Report-control diagnostics are silent unless the URL has exactly one `debug=1` parameter. Missing, non-`1`, duplicate, malformed, or unparseable debug state leaves them disabled. Debug mode does not alter the generated HTML asset references.
+39. When enabled, structured diagnostics cover document readiness, startup timing, each feature's start, success, and failure, safe control counts or enabled state, and duplicate initialization attempts. A feature failure retains its accessible status and does not block other features. Missing or throwing console methods do not interrupt initialization.
+40. Diagnostic output contains no report or prompt content, clipboard contents, storage values, credentials, tokens, full URLs, query strings, or raw exception stacks. Failures before script execution are investigated with browser network evidence, and the exact published URL remains an unverified release condition unless it was directly checked.
 
 If a validation fails, correct the document and repeat validation before finishing.
 

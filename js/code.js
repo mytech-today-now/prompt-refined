@@ -11,7 +11,100 @@
     "in-progress": "In progress",
     complete: "Complete"
   };
+  const debugPrefix = "[prompt-refined:report-debug]";
+  const debugEnabled = readDebugFlag();
+  const runtimeStateKey = Symbol.for("prompt-refined.report-controls.v1");
+  const runtimeState = window[runtimeStateKey] || {
+    startupScheduled: false,
+    initializationStarted: false
+  };
+  window[runtimeStateKey] = runtimeState;
   let statusNumber = 0;
+
+  function readDebugFlag() {
+    try {
+      const currentUrl = new window.URL(window.location.href);
+      const values = currentUrl.searchParams.getAll("debug");
+      return values.length === 1 && values[0] === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function logDebugEvent(event, details = {}) {
+    if (!debugEnabled) return;
+
+    try {
+      const logger = window.console && window.console.info;
+      if (typeof logger !== "function") return;
+      logger.call(window.console, debugPrefix, { event, ...details });
+    } catch {
+      // Diagnostics must never interrupt report controls.
+    }
+  }
+
+  function diagnosticCount(selector) {
+    try {
+      return document.querySelectorAll(selector).length;
+    } catch {
+      return null;
+    }
+  }
+
+  function diagnosticEnabledCount(selector) {
+    try {
+      return Array.from(document.querySelectorAll(selector))
+        .filter((control) => !control.matches(":disabled")).length;
+    } catch {
+      return null;
+    }
+  }
+
+  function getFeatureDiagnosticState(feature) {
+    switch (feature) {
+      case "appearance":
+        return {
+          fieldsets: diagnosticCount("[data-report-preferences]"),
+          controls: diagnosticCount("[data-report-style-control], [data-color-mode-control]"),
+          enabledControls: diagnosticEnabledCount("[data-report-style-control], [data-color-mode-control]")
+        };
+      case "issue-progress":
+        return {
+          issues: diagnosticCount(".issue"),
+          controls: diagnosticCount(".issue select[data-issue-progress-control]"),
+          enabledControls: diagnosticEnabledCount(".issue select[data-issue-progress-control]")
+        };
+      case "issue-copy":
+        return {
+          issues: diagnosticCount(".issue"),
+          controls: diagnosticCount(".issue-copy-button")
+        };
+      case "implementation-prompt-copy":
+        return {
+          targets: diagnosticCount("[data-copy-target]"),
+          controls: diagnosticCount("[data-copy-target] + .copy-control button")
+        };
+      default:
+        return {};
+    }
+  }
+
+  function getSafeErrorType(error) {
+    try {
+      const candidate = error && typeof error.name === "string" ? error.name : "Error";
+      return /^[A-Za-z][A-Za-z0-9]*$/.test(candidate) ? candidate.slice(0, 32) : "Error";
+    } catch {
+      return "Error";
+    }
+  }
+
+  function logFeatureEvent(event, feature, error) {
+    if (!debugEnabled) return;
+
+    const details = { feature, state: getFeatureDiagnosticState(feature) };
+    if (error) details.errorType = getSafeErrorType(error);
+    logDebugEvent(event, details);
+  }
 
   function assignStatusDescription(button, status, prefix) {
     let statusId;
@@ -37,13 +130,18 @@
     status.textContent = config.message;
   }
 
-  function runInitializer(initializer, failureConfig) {
+  function runInitializer(feature, initializer, failureConfig) {
+    logFeatureEvent("feature:start", feature);
     try {
       initializer();
-    } catch {
-      if (failureConfig) {
-        announceInitializationFailure(failureConfig);
+      logFeatureEvent("feature:success", feature);
+    } catch (error) {
+      try {
+        if (failureConfig) announceInitializationFailure(failureConfig);
+      } catch {
+        // Keep later feature initializers independent if status markup also fails.
       }
+      logFeatureEvent("feature:failure", feature, error);
     }
   }
 
@@ -559,45 +657,60 @@
     });
   }
 
-  let initializationStarted = false;
-
   function initializeReportControls() {
-    if (initializationStarted) return;
-    initializationStarted = true;
+    if (runtimeState.initializationStarted) {
+      logDebugEvent("startup:duplicate-initialization-attempt", { readyState: document.readyState });
+      return;
+    }
+    runtimeState.initializationStarted = true;
+    logDebugEvent("startup:initialization-start", { readyState: document.readyState });
 
-    runInitializer(initializeAppearanceControls, {
+    runInitializer("appearance", initializeAppearanceControls, {
       selector: "[data-preferences-status]",
       className: "preferences-status",
       attribute: "data-preferences-status",
       hostSelector: ".report-preferences, .report-header",
       message: "Appearance controls could not initialize. Reload the report and check that the shared script is available."
     });
-    runInitializer(initializeIssueProgressControls, {
+    runInitializer("issue-progress", initializeIssueProgressControls, {
       selector: "[data-issue-progress-status]",
       className: "issue-progress-storage-status",
       attribute: "data-issue-progress-status",
       hostSelector: ".report-header, .report-main",
       message: "Issue progress controls could not initialize. Reload the report and check that the shared script is available."
     });
-    runInitializer(initializeIssueCopyControls, {
+    runInitializer("issue-copy", initializeIssueCopyControls, {
       selector: "[data-issue-copy-initialization-status]",
       className: "copy-status",
       attribute: "data-issue-copy-initialization-status",
       hostSelector: ".report-header, .report-main",
       message: "Issue-copy controls could not initialize. Reload the report and check that the shared script is available."
     });
-    runInitializer(initializeCopyControls, {
+    runInitializer("implementation-prompt-copy", initializeCopyControls, {
       selector: "[data-prompt-copy-initialization-status]",
       className: "copy-status",
       attribute: "data-prompt-copy-initialization-status",
       hostSelector: ".report-main, .report-header",
       message: "Implementation-prompt copy controls could not initialize. Reload the report and check that the shared script is available."
     });
+
+    logDebugEvent("startup:initialization-complete", { readyState: document.readyState });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initializeReportControls, { once: true });
+  logDebugEvent("script:executed", { readyState: document.readyState });
+
+  if (runtimeState.startupScheduled || runtimeState.initializationStarted) {
+    logDebugEvent("startup:duplicate-initialization-attempt", { readyState: document.readyState });
+  } else if (document.readyState === "loading") {
+    runtimeState.startupScheduled = true;
+    logDebugEvent("startup:waiting-dom-content-loaded", { readyState: document.readyState });
+    document.addEventListener("DOMContentLoaded", () => {
+      runtimeState.startupScheduled = false;
+      logDebugEvent("startup:dom-content-loaded", { readyState: document.readyState });
+      initializeReportControls();
+    }, { once: true });
   } else {
+    logDebugEvent("startup:initializing-immediately", { readyState: document.readyState });
     initializeReportControls();
   }
 })();

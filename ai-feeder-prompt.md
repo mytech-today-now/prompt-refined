@@ -2,7 +2,7 @@ You are a world-class prompt engineer, senior software architect, application de
 
 ## Objective
 
-Transform the software development request between the markers below into one complete, production-ready prompt that another capable coding LLM can execute to inspect, diagnose, implement, test, and verify the requested change.
+Transform the software development request between the markers below into one complete, production-ready prompt that another capable coding LLM can execute to inspect, diagnose, plan, implement, test, and verify the requested change using Beads and OpenSpec as mandatory work-tracking and specification tools.
 
 Preserve the user's original intent. Make the work precise, actionable, safe, testable, and resistant to incomplete implementation or invented details.
 
@@ -64,6 +64,32 @@ Require the coding LLM to inspect the available repository before modifying code
 6. Review nearby code and recent changes when useful for understanding intended behavior.
 7. Avoid creating duplicate systems or competing patterns when a canonical implementation already exists.
 8. Preserve the repository's coding style, naming conventions, architecture, and dependency strategy unless a change is necessary to solve the request correctly.
+
+#### Mandatory Beads and OpenSpec Setup and Workflow
+
+Every generated software-engineering prompt must require the coding LLM to install, verify, and use both Beads and OpenSpec for the requested work. This requirement applies to the complete returned prompt and to each issue's `Implementation prompt`, since those prompts may be copied and run independently. Make every `Implementation prompt` self-contained: include the official links and the essential install-or-verify gate, linked Beads and OpenSpec planning, progress updates, and completion reporting. Keep repeated workflow wording concise while retaining each required action. Include the official project sources:
+
+- Beads: https://github.com/gastownhall/beads
+- OpenSpec: https://github.com/Fission-AI/OpenSpec
+
+Tell the coding LLM to consult the current installation and usage instructions in these official repositories. Do not rely on remembered commands when current documentation is available, and do not substitute an unrelated tracker or specification workflow.
+
+Before implementation, the coding LLM must:
+
+1. Inspect the current checkout, working-tree changes, repository instructions, and any existing `.beads/`, `openspec/`, tool configuration, and agent-integration files. Preserve existing user changes, tracker records, specifications, and instruction files. Do not reset, migrate, reinitialize, overwrite, bulk-close, or replace existing state without first determining what it contains and choosing a documented, non-destructive path.
+2. Check whether the `bd` and `openspec` commands are available and usable in the current environment. Verify each with its current documented version or help command, and inspect whether the active coding assistant has the project integration needed to use the documented workflow.
+3. If either tool is missing or unusable, read its official installation instructions and install it using a supported method for the current operating system and environment. Install Beads as its documented CLI tool rather than cloning the Beads source repository into the project. If Beads has not been initialized for this project, initialize it using documented options that preserve existing files and instructions. If OpenSpec project configuration or the active assistant integration is missing, initialize or update only that missing setup. Verify the installed commands and required integrations before proceeding. Do not silently skip installation, pretend a failed install succeeded, or continue with source-code implementation while either required tool is unavailable.
+4. If installation or safe project initialization cannot be completed, stop before changing application source. Report the exact attempted commands, observed errors, access or environment limitation, and the specific action needed to unblock work. Do not claim the requested implementation is complete.
+
+Once both tools are ready, use them together throughout the task:
+
+1. Read the existing Beads workflow context and inspect relevant existing work using the commands documented by the installed version. Reuse or update a matching open Beads issue when one already represents the request; otherwise create a focused parent issue and only the child issues needed for independently trackable work. Include the request, scope, acceptance criteria, verification expectations, dependencies, and the OpenSpec change path in the relevant Beads records. Do not create duplicate issues or use a Markdown TODO list as a replacement for Beads.
+2. Use the repository's supported OpenSpec workflow and the command form selected for the active coding assistant. Create or update a focused change proposal before implementation. Capture the request's behavior and constraints as testable requirements and scenarios, add design notes when architecture decisions need to be recorded, and maintain the change's task list. Do not replace or rewrite unrelated existing specifications.
+3. Cross-reference the systems: record the Beads issue ID or IDs in the corresponding OpenSpec change artifacts, and record the OpenSpec change path in Beads. Keep the task breakdown concise and consistent between them. Use Beads to track ownership, dependencies, readiness, blockers, and completion; use OpenSpec to hold the change proposal, requirements, design decisions, and implementation checklist.
+4. Before editing source, confirm the Beads work and OpenSpec change agree with the user's request and acceptance criteria. Implement only the authorized scope. Update both systems as work advances, including when tests reveal a changed requirement, a blocker, or a justified scope adjustment. Do not mark a task complete while its acceptance criteria or required verification remain unmet.
+5. At completion, reconcile the OpenSpec task checklist and Beads statuses. Close Beads work only when its stated acceptance criteria are satisfied; leave blocked or incomplete work open with a precise explanation. Report the tool versions, Beads IDs and final statuses, OpenSpec change path and task status, setup or initialization performed, and any uncompleted work.
+
+Do not add the tools as application runtime dependencies merely to use their development workflows. Keep installation global or environment-scoped when supported, and commit only project configuration or planning artifacts required by the documented workflow and authorized by the task. Inspect the final diff for unintended modifications made by initialization or setup commands.
 
 ### 4. Evidence-Based Diagnosis
 
@@ -227,6 +253,8 @@ Require the coding LLM to report every command executed, whether it passed or fa
 
 It must never describe unexecuted checks as passing.
 
+It must also report Beads and OpenSpec setup, commands, artifacts, and statuses truthfully, without claiming an installation, initialization, cross-reference, task update, or completion that was not verified.
+
 ### 11. Acceptance Criteria
 
 Convert the user's request into specific, observable, testable acceptance criteria.
@@ -261,8 +289,9 @@ Require the coding LLM to finish with a concise implementation report containing
    - Work genuinely outside the authorized scope expressed as new prompt(s) that solve that specific work.
    - Each of those new prompts must then be post-processed through this template: https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/highest-quality-most-effective-prompt-possible.md
    - In that template, the new prompt replaces "[Insert the user's prompt here]".
-   - Return the post-processed results, not the raw unprocessed follow-up drafts.
+   - Return the post-processed results, not the raw unprocessed follow-up drafts. Every returned follow-up implementation prompt must also retain the mandatory Beads and OpenSpec installation, verification, linked-planning, and status-tracking requirements in this template. Check the post-processed result for those requirements and add them if the canonical template does not preserve them.
    - Include migration or rollback notes when applicable.
+9. Beads and OpenSpec. Report verified tool versions, installation or initialization actions, Beads issue IDs and statuses, the OpenSpec change path and task status, cross-references, and any work left blocked or incomplete.
 
 Do not require lengthy narration when a compact report communicates the result accurately.
 
@@ -276,6 +305,8 @@ The returned prompt must:
 - Include the original software development request verbatim or faithfully normalized.
 - Contain all context and constraints needed by the coding LLM.
 - Require repository inspection, root-cause analysis, implementation, testing, and verification.
+- Require successful installation and verification of both Beads and OpenSpec before implementation, and use linked records in both tools throughout the work.
+- Make every issue's `Implementation prompt` independently usable and require the same Beads and OpenSpec workflow, including installation when missing, verification before implementation, cross-linked work records, and status reconciliation.
 - Include explicit positive-path, negative-path, edge-case, and regression-testing requirements.
 - Include measurable acceptance criteria.
 - Include the required final implementation report.
@@ -364,6 +395,7 @@ Before responding, verify internally that the generated prompt:
 - Requires targeted regression tests that prevent the issue from recurring.
 - Requires regression coverage for new features and existing behavior.
 - Requires evidence-based verification.
+- Requires both Beads and OpenSpec to be installed and verified before implementation, with safe handling of existing state, linked planning records, synchronized progress, and truthful final statuses in the complete prompt and in every independently usable issue implementation prompt.
 - Defines observable acceptance criteria.
 - Prevents unsupported claims about files, execution, or test results.
 - Is self-contained and immediately usable.
