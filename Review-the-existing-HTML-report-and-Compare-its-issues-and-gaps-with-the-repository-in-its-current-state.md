@@ -34,16 +34,99 @@ Every unresolved source issue must map to an actionable article, individually or
 
 Every issue article must include all required subsections from `pre-mortem-with-prompts.md`, including evidence or rationale, failure mode, impact, mitigation, implementation prompt, regression tests, additional baseline tests, measurable acceptance criteria, and confidence. Its implementation prompt must be independently usable in a fresh coding-agent conversation. State the exact repository paths or symbols to inspect, the evidence behind the issue, desired and preserved behavior, a minimal repository-consistent fix, applicable failure handling, concrete tests and assertions, supported commands, and required final reporting. Choose only relevant test categories and describe each with setup, action, expected result, and assertions. Do not expose private chain-of-thought in issue prompts.
 
-## HTML and shared assets
+## HTML, CSS, and JavaScript contract
 
-Use the full semantic structure and selector contract in `pre-mortem-with-prompts.md` and repository guidance. In particular:
+Use the shared semantic HTML, CSS, and JavaScript contract below and in the repository guidance. These presentation and control requirements apply even when the evidence supports zero actionable findings. They do not create a finding quota. The evidence-driven issue-count rules above continue to govern the number of issue articles and risk-table rows.
 
-- Use the shared stylesheet URL `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css` exactly once, and the shared script URL `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js` exactly once as a deferred external script inside `<head>`. Do not use other CSS, JavaScript, runtime dependencies, external assets, inline styles, inline scripts, event-handler attributes, or local asset paths.
-- Include semantic report landmarks, summary and scope sections, a table of contents with one entry per actionable finding (or no entries when there are none), risk register, issue list, completed-source-issues summary, and footer. Use the required report metadata, visible repository attribution, evidence-backed project authorship, and distinct myTech.Today profile and report authorship. Do not infer project authorship from commit authorship.
-- Follow the canonical requirement for Basic and System defaults, appearance controls, progress controls, accessible status text, no-script explanation, issue copy behavior, and issue-progress synchronization. Static controls must start disabled and remain understandable if JavaScript is unavailable. Keep issue text and implementation prompts readable and selectable without JavaScript.
-- Use the exact documented, versioned localStorage keys and behavior specified in the repository guidance. Do not imply that report content edits persist.
-- Do not claim that the raw script or stylesheet URLs are published, available, or working based only on local files. Verify exact remote availability and browser behavior only when those checks are accessible. Otherwise state this as an unverified release condition in the report.
-- Preserve the canonical report fields, one-to-one risk-table mapping, status behavior, source evidence, output naming, and safe no-overwrite rules. Derive the number of findings and risk-table rows from supported evidence, with no fixed target. Use the shared stylesheet's supported configurations rather than adding styling or changing asset URLs.
+### One shared stylesheet and script
+
+Every generated report must include exactly one stylesheet link with `rel="stylesheet"` and `href="https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css"`, plus exactly one external script element with `defer` and `src="https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js"`. Both elements must be inside the document `<head>`. These exact raw GitHub URLs are the only CSS and JavaScript sources for every style and interaction. Do not use relative asset paths, additional stylesheets, other asset URLs, local CSS or JavaScript files, inline style blocks, style attributes, inline scripts, event-handler attributes, JavaScript in attributes, or duplicated control logic. Do not add external fonts, images, libraries, trackers, analytics, or other network dependencies. A visible link in report content to the company website or support email is allowed and is not an embedded runtime dependency.
+
+The shared script must wait for DOMContentLoaded if it runs before document parsing completes. It initializes appearance, issue progress, whole-issue copy, and implementation-prompt copy independently. A failure in one feature must not prevent the others from initializing, and each initialization failure must be announced in its accessible status region. It wires existing static controls before enabling them. It may repair missing markup as a fallback but must reuse controls and avoid duplicates.
+
+Local copies of the CSS or JavaScript do not prove that these raw URLs are available. Their availability depends on the files being committed and published on the main branch. Claim that the dependency is available or that controls work only after verifying the exact published URL and browser behavior. If either cannot be checked, identify it in the generated report as an unverified release condition.
+
+### Semantic document structure and attribution
+
+Use `<header class="report-header">`, `<main class="report-main">`, and `<footer class="report-footer">` for the document landmarks. Mark the document title as `.report-title` and report identity, branch, revision, author, attribution evidence, and timestamp details as `.report-meta`. Include `.report-summary`, `.scope-notes`, `.risk-register`, `.issue-list`, and a completed source issues summary.
+
+In the head, include:
+
+- A descriptive title.
+- `<meta name="author" content="Kyle Rode, myTech.Today">`.
+- `<meta name="generator" content="myTech.Today prompt-refined report workflow">`.
+- `<meta name="report-repository" content="...">` identifying the reviewed repository.
+- `<meta name="report-repository-url" content="...">` only when that URL is verified.
+- `<meta name="report-repository-author" content="...">` containing the evidence-backed project author or maintainer. If the available repository evidence does not establish this, use the exact content value `Not identified from available repository evidence`.
+
+In the visible report header, identify the reviewed repository and link its name to the verified repository URL when known, branch or revision, project author or maintainer, and evidence used for that attribution. Use a semantic definition list with class `.report-attribution-fields` for repository attribution details. Separately identify Kyle Rode as report author using myTech.Today's prompt-refined workflow. Distinguish report author, project author, repository owner, and recent committers. A commit author alone does not establish project authorship. Do not guess; use the same not-identified wording in the visible project-author field when appropriate. Escape metadata values correctly.
+
+In the visible report header, include a `.report-attribution` section and a separate `.company-profile` section containing `.company-services`. Use the description “myTech.Today is a Midwestern technology company.” List only these approved services: managed IT and remote support; computer and network support; backup and recovery; web development and software services. Include links to `https://mytech.today` and `mailto:support@mytech.today`. Keep the company profile separate from reviewed-project authorship.
+
+### Shared finding and navigation markup
+
+Put the risk table inside a horizontally scrollable, keyboard-focusable `.risk-table-wrap` with `role="region"`, `aria-label="Risk register"`, and `tabindex="0"`. Use a semantic table with class `.risk-table` and `table`, `thead`, `tbody`, and `tr` elements. Include exactly one risk row for each actionable issue article, matching its ID, title, kind, priority, severity, likelihood, and impacted area. The table may have no issue rows when there are no actionable findings.
+
+Include `<nav class="issue-toc" aria-label="Table of contents">` with one `.issue-toc-link` for each actionable finding and no finding links when the finding count is zero. Every link targets exactly one matching issue article and contains exactly one visible `.issue-toc-status` with `data-issue-progress-indicator` set to that article's stable ID and `data-progress="incomplete"`. The visible initial label is Incomplete.
+
+Put findings in `.issue-list`. Each finding is an `<article class="issue">` with a unique stable ID, `data-progress="incomplete"`, and a `data-issue-kind` value using the applicable kind taxonomy in lowercase kebab case. For this prompt, unresolved source-report issues use `core` and distinct repository gaps use `additional`. Include `.issue-header`, `.issue-number`, `.issue-title`, and `.issue-kind` for the visible finding heading. Each finding has exactly one matching table-of-contents link and progress indicator.
+
+Place issue metadata in `<dl class="issue-fields">` with semantic `dt` and `dd` elements. Show priority and severity as text in `.priority-label[data-priority]` and `.severity-label[data-severity]`, using `p1` through `p4` and `1` through `4` as their data values. Include the written classification so color is never the only signal. Put each full implementation prompt in `<pre class="implementation-prompt" data-copy-target><code>...</code></pre>`. Keep this text readable and selectable when JavaScript is disabled.
+
+### Appearance choices and storage
+
+Set the static document root to `data-report-style="basic"` and `data-color-mode="system"`. The stylesheet contains Basic, Minimal, and Full configurations selected through those root attributes; appearance controls never change the stylesheet URL.
+
+Put a visible `<fieldset class="report-preferences" data-report-preferences disabled>` in the report header. It must be present in the static HTML, initially disabled, and must not have `hidden`. Include visibly labelled `<select data-report-style-control>` and `<select data-color-mode-control>` elements. Their option values and labels are exactly `basic` / Basic, `minimal` / Minimal, `full` / Full & complete style, `system` / System, `light` / Light, and `dark` / Dark. Select Basic and System initially.
+
+Include these accessible live regions near the controls:
+
+- A `.preferences-status` region with `data-preferences-status`, `role="status"`, and `aria-live="polite"`. Use this initial text: “JavaScript has not initialized appearance controls. If this message remains, check that the shared script loaded and completed initialization.”
+- An `.issue-progress-storage-status` region with `data-issue-progress-status`, `role="status"`, and `aria-live="polite"`. Use this initial text: “JavaScript has not initialized issue progress controls. If this message remains, check that the shared script loaded and completed initialization.”
+
+Include a `<noscript>` explanation that the report uses Basic styling and System color mode, that copy and progress controls require JavaScript, and that report and implementation-prompt text remains available without it. Do not imply that content edits are saved.
+
+Persist only appearance preferences using the exact `localStorage` key `prompt-refined:report-preferences:v1`. On startup, read and validate saved style and color-mode values against their allowlists. Missing or invalid values use Basic and System. Each change updates the root attributes and attempts to save the new values. System follows `prefers-color-scheme`; explicit Light and Dark override it. If storage is unavailable or a write fails, the current-page controls continue working and the preferences status explains that the choice was not saved. Store no report content.
+
+### Issue-progress controls and report-scoped storage
+
+Every issue article starts with `data-progress="incomplete"` and contains one static `.issue-actions` group. It includes one visibly labelled, initially disabled `<select data-issue-progress-control>` with exactly the values `incomplete`, `in-progress`, and `complete`, displayed as Incomplete, In progress, and Complete. Include one `.issue-progress-state[data-issue-progress-state][data-progress="incomplete"]` badge displaying Incomplete. Both the selector and badge exist in the source HTML before the shared script runs.
+
+Persist progress separately from appearance preferences with this key format: `prompt-refined:issue-progress:v1:<encoded-document-path>`, where `<encoded-document-path>` is `encodeURIComponent(window.location.pathname || document.title || "report")`. Store an allowlisted map keyed by stable issue article ID and containing only `incomplete`, `in-progress`, or `complete`. This scopes progress to the current report. Restore validated values on startup and default missing or invalid values to `incomplete`. Save each change. JavaScript attaches the change handler before enabling the existing selector, then keeps the article's `data-progress`, visible badge, and only its matching table-of-contents indicator synchronized.
+
+If storage cannot be read or a write fails, keep selectors and in-page visual state working for the current page, and explain access or persistence failure through the accessible issue-progress status. Persist only per-issue progress choices, never report-content edits. Reinitializing the shared script must not create duplicate selectors, badges, event listeners, or issue controls.
+
+### Copy controls and failure behavior
+
+The shared script adds exactly one keyboard-operable button labelled Copy Issue to Clipboard and one live .copy-status region to each issue. The whole-issue copy includes all readable article content from the visible issue number through its final content, including every metadata field and the complete implementation prompt. Exclude the dynamically inserted .issue-actions group and the implementation-prompt .copy-control UI and status from the copied text.
+
+The shared script also adds one separate implementation-prompt copy button and live .copy-status for each marked prompt, using .copy-control. Use safe DOM APIs and text properties, never innerHTML. Announce successful copies. If clipboard access is unavailable or rejected, explain how to select and copy the visible issue or prompt manually. A copy failure must not alter or remove report content. If JavaScript does not run, keep all report text and prompt text readable and selectable; do not imply that copy buttons are available.
+
+### Shared stylesheet behavior
+
+The one shared stylesheet must support every required semantic class and data attribute in Basic, Minimal, and Full configurations and in System, Light, and Dark color modes. All nine combinations must work without changing the stylesheet URL. System follows the operating-system color preference. .report-attribution, .company-profile, and .company-services remain readable in every combination, at narrow widths, and in print.
+
+Provide responsive layouts; readable long text and code; accessible contrast; visible keyboard focus for controls; distinguishable incomplete, in-progress, and complete issue and table-of-contents states; and print rules that do not clip, hide, or truncate report content. Do not use color as the only signal for status or classification. Keep the selected issue progress label visible in print while hiding interactive buttons and selectors. Preserve semantic readability if CSS or JavaScript is disabled or unavailable.
+
+### Optional report-control diagnostics
+
+Shared-script console diagnostics are opt-in only when the report URL has exactly one debug=1 query parameter. Missing debug, any other value, duplicate parameters, malformed URL state, or URL parsing failure leaves diagnostics disabled. Diagnostics must not require an HTML attribute, inline code, alternate asset reference, or other debug markup.
+
+When enabled, diagnostics use the prefix [prompt-refined:report-debug] and cover document readiness and startup timing; start, success, and failure of appearance, issue-progress, whole-issue-copy, and implementation-prompt-copy initialization; safe control counts or enabled-state information; and duplicate initialization attempts. Keep features independent. Accessible initialization-failure messages must still work whether diagnostics are enabled or disabled. Missing or throwing console methods must not interrupt initialization.
+
+Never log report or implementation-prompt text, clipboard contents, storage values, credentials, tokens, full URLs, query strings, or raw exception stacks. If safe failure metadata is needed, limit it to values such as the feature name and error type. Failures before script execution, including a failed script download, require browser network evidence and cannot be claimed as page diagnostics.
+
+## Generated-document validation
+
+Before writing the report, validate its static HTML against the complete asset, metadata, semantic-selector, accessibility, and no-inline-code contract above. Check that there is exactly one exact shared stylesheet URL and one exact deferred shared-script URL, both inside head, with no alternate or local assets. Check for one matching TOC indicator and one static disabled progress selector and badge per actual issue, correct stable IDs and kinds, exact appearance choices, and a risk row for each actual issue. A zero-finding report has no issue articles, issue links, or issue rows; do not add findings to satisfy control-count checks. Preserve the source report's traceability, completed-issue summary, required issue fields, output path, timestamp format, and no-overwrite rule.
+
+When Playwright and browser verification are available, use Playwright to load the saved report with its actual published stylesheet and script URLs. Verify that both exact URLs load; do not intercept them with local replacements when claiming publication or availability. Confirm that appearance and progress controls become enabled only after initialization, initial statuses update, style and color choices update the root attributes, all nine appearance combinations work, and preferences persist across reloads and browser sessions when storage is available. Verify that unavailable or rejected storage keeps current-page controls functional and announces the failure. For every issue state, confirm the article, visible badge, matching table-of-contents status, and report-scoped saved value stay in sync after reload. Confirm invalid saved values fall back to Incomplete and that progress for separate report paths does not collide.
+
+Also verify whole-issue and implementation-prompt copy success, unavailable and rejected clipboard fallback, unchanged visible content after failure, and no duplicate controls or listeners after repeated initialization. Check narrow and desktop widths, keyboard operation and focus, screen-reader status announcements, reduced-motion behavior, zoom at 200 percent, readable long prompts, touch-target sizing, print output, and behavior with CSS or JavaScript disabled. If the exact remote URL or browser behavior cannot be checked, state that as an unverified release condition and do not claim the controls work.
+
+When Playwright browser verification is performed, confirm diagnostics are silent without exactly one debug=1 parameter and fail closed for missing, non-1, duplicate, malformed, or unparseable URL state. With diagnostics enabled, verify startup and per-feature events, safe state counts, independent feature failures, duplicate initialization reporting, and non-interruption from missing or throwing console methods. Check that output contains none of the prohibited report, prompt, clipboard, storage, URL, query, credential, token, or stack data.
+
+Do not install dependencies solely for this report check. If Playwright, browser access, or remote asset access is unavailable, still perform the relevant static checks, state which verification could not run, and identify remote asset availability and control behavior as unverified release conditions. Do not claim browser rendering, remote asset availability, control initialization, publication, or deployment behavior based on source inspection alone.
 
 ## Output file and verification
 
