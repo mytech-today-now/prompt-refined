@@ -100,7 +100,7 @@ Use only these exact raw GitHub URLs in generated HTML:
 - `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css`
 - `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`
 
-Include exactly one `<link rel="stylesheet">` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css` and exactly one deferred external `<script>` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`, both inside `<head>`. The script element must have `defer`. There is only one stylesheet file. Do not use relative asset paths or add alternate stylesheet links.
+Include exactly one `<link rel="stylesheet">` for `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css` inside `<head>`. Place exactly one deferred external `<script src="https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js" defer=""></script>` immediately before the closing `</body>` tag, after all report content, as the final resource reference in document order. Do not place another script or resource reference after it. There is only one stylesheet file. Do not use relative asset paths or add alternate stylesheet links.
 
 The generated document must not contain `<style>` blocks, `style` attributes, inline `<script>` blocks, inline event handlers, duplicated JavaScript, or JavaScript in attributes. The only permitted CSS and JavaScript sources for every style and interaction are the single stylesheet and script above. Do not add local or alternate CSS/JavaScript files, other asset URLs, or external fonts, images, libraries, trackers, analytics, or other network dependencies. Local asset files do not prove that the raw URLs are available: availability depends on the files being committed and published to the `main` branch. Do not claim publication or availability without verification.
 
@@ -240,7 +240,7 @@ Create one valid HTML5 document in this order:
    - Exactly 20 issue articles inside `.issue-list`, ordered by severity, likelihood, impact, and urgency, each initialized with `data-progress="incomplete"`
    - Scope notes and limitations in a section with class `scope-notes`
    - Footer with class `report-footer`, repository identity, generation timestamp, output path, and report scope
-   - Exactly one deferred external script reference to the shared `code.js` raw URL above, located in `<head>`
+   - Exactly one deferred external script reference to the shared `code.js` raw URL above, immediately before the closing `</body>` tag and after all report content
 
 Use semantic elements where appropriate, including:
 
@@ -542,7 +542,7 @@ When reviewing report-control initialization or diagnostics, cover opt-in `?debu
 10. Escape repository code and user-controlled values before embedding them in HTML.
 11. Keep the report readable in modern browsers and when printed.
 12. Use only the exact shared stylesheet and script URLs specified in the asset contract. Do not add external fonts, images, libraries, analytics, trackers, or other network dependencies.
-13. Keep all CSS in the shared stylesheet and all JavaScript in the shared `js/code.js` source. Generated HTML may include only the single external deferred script reference specified above, in `<head>`. Do not embed CSS or JavaScript, add inline style or event-handler attributes, or duplicate script logic. Keep copy and progress enhancements optional and ensure the document remains readable and its issue text and prompts remain selectable if JavaScript is unavailable. The static appearance and issue-progress status messages must make clear that JavaScript has not initialized them; the shared script must replace those messages after successful initialization or announce an accessible error if initialization fails.
+13. Keep all CSS in the shared stylesheet and all JavaScript in the shared `js/code.js` source. Generated HTML may include only the single external deferred script reference specified above, immediately before `</body>` and after all report content. Do not embed CSS or JavaScript, add inline style or event-handler attributes, or duplicate script logic. Keep copy and progress enhancements optional and ensure the document remains readable and its issue text and prompts remain selectable if JavaScript is unavailable. The static appearance and issue-progress status messages must make clear that JavaScript has not initialized them; the shared script must replace those messages after successful initialization or announce an accessible error if initialization fails.
 14. Target a comprehensive report. A typical complete document is 14,000 to 28,000 words of substantive content. Do not pad. Do not omit required subsections to stay short.
 
 # No Em-Dash Rule
@@ -576,9 +576,9 @@ Before completing the task, validate all of the following:
 15. No issue is duplicated or merely a narrower restatement of another issue.
 16. No unsupported file, route, API, service, or behavior is presented as fact.
 17. The file contains no em dash character.
-18. The document references exactly one permitted shared stylesheet URL and one deferred shared script URL in `<head>` as its only CSS and JavaScript sources, with no other runtime dependencies; its head and visible header contain repository and evidence-backed author metadata plus the required myTech.Today profile.
+18. The document references exactly one permitted shared stylesheet URL in `<head>` and one deferred shared script URL immediately before `</body>` as its only CSS and JavaScript sources, with no other runtime dependencies; its head and visible header contain repository and evidence-backed author metadata plus the required myTech.Today profile.
 19. The document remains understandable with CSS disabled.
-20. The document uses the shared selector contract, one stylesheet link to the exact `style.css` raw URL, and one deferred script link to the exact `code.js` raw URL.
+20. The document uses the shared selector contract, one stylesheet link in `<head>` to the exact `style.css` raw URL, and one deferred script element to the exact `code.js` raw URL immediately before `</body>`, after all report content and as the final resource reference in document order.
 21. The document is readable at mobile and desktop widths.
 22. Print preview does not clip text or truncate implementation prompts.
 23. With JavaScript disabled or clipboard access unavailable or rejected, all issue and prompt text remains intact and users receive a clear manual-copy path when controls are present.
