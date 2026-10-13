@@ -417,9 +417,12 @@
 
   function initializeIssueProgressControls() {
     const articles = Array.from(document.querySelectorAll(".issue"));
-    if (!articles.length) return;
-
     const status = getProgressStatus();
+    if (!articles.length) {
+      status.textContent = "No issue progress controls are present in this report.";
+      return;
+    }
+
     ensureIssueTocIndicators(articles);
     const indicators = new Map();
     document.querySelectorAll("[data-issue-progress-indicator]").forEach((indicator) => {
