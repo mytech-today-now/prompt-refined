@@ -9,6 +9,7 @@ Notable changes to the repository are recorded here.
 - Added a GitHub Actions workflow and explicit FTPS upload script for publishing the shared report stylesheet and JavaScript.
 - Documented the required GitHub Actions secrets and variables for asset publishing.
 - Updated browser validation to require hosted URLs for newly generated reports while preserving a local compatibility check for the tracked legacy report.
+- Fixed the Playwright test-directory path so the configured browser suite is discoverable.
 
 ### Changed
 
