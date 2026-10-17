@@ -87,3 +87,20 @@ A ready-to-use **prompt template** that generates an image prompt based on any f
 | Equip an agent or session with ongoing prompt-engineering expertise | `SKILLS-expert-prompt-engineering-optimization.md` |
 | Refine one prompt right now | `highest-quality-most-effective-prompt-possible.md` |
 | Need an image based on a document or file | `image-prompt.md` |
+
+## Publish shared report assets
+
+The `Publish shared report assets` GitHub Actions workflow uploads the latest `css/style.css` and `js/code.js` to the configured FTP directory when either file changes on `main`. It also supports a manual run from `main`. It uploads only these two files and does not delete or synchronize other remote files.
+
+Configure these GitHub repository Actions secrets before the first publish:
+
+- `PROMPT_ASSET_FTP_HOST`: FTP server hostname or IPv4 address, without a scheme or path.
+- `PROMPT_ASSET_FTP_USERNAME`: the deployment account username.
+- `PROMPT_ASSET_FTP_PASSWORD`: the deployment account password. Store it only as a GitHub Actions secret, never in this repository.
+
+Configure these repository Actions variables:
+
+- `PROMPT_ASSET_FTP_REMOTE_DIR`: the existing absolute FTP directory that maps to `/tools/m/config/prompts` on the website. The routine does not create directories.
+- `PROMPT_ASSET_FTP_PORT`: optional explicit FTPS port; defaults to `21`.
+
+The workflow requires explicit FTPS and fails if TLS is unavailable. It does not fall back to sending credentials over plaintext FTP. Missing or invalid configuration stops the routine before it connects. Since the account password was shared in chat, rotate it before adding the replacement as `PROMPT_ASSET_FTP_PASSWORD`.

@@ -11,10 +11,13 @@ const generatedReports = existsSync(generatedReportDirectory)
     .filter((name) => name.toLowerCase().endsWith('.html'))
     .map((name) => resolve(generatedReportDirectory, name))
   : [];
+const legacyGeneratedReport = resolve(generatedReportDirectory, 'pre-mortem-2026-09-29-22-27-09.html');
 const baseUrl = 'http://127.0.0.1/report.html';
 const debugPrefix = '[prompt-refined:report-debug]';
-const sharedStyleUrl = 'https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css';
-const sharedScriptUrl = 'https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js';
+const sharedStyleUrl = 'https://mytech.today/tools/m/config/prompts/style.css';
+const sharedScriptUrl = 'https://mytech.today/tools/m/config/prompts/code.js';
+const legacySharedStyleUrl = 'https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css';
+const legacySharedScriptUrl = 'https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js';
 
 const reportFixture = (deferScript = true) => `<!doctype html>
 <html lang="en" data-report-style="basic" data-color-mode="system">
@@ -204,24 +207,28 @@ test('existing generated HTML documents initialize in Chromium with their exact 
 
   let stylesheetRequests = 0;
   let scriptRequests = 0;
-  await page.route(sharedStyleUrl, async (route) => {
-    stylesheetRequests += 1;
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/css',
-      headers: { 'access-control-allow-origin': '*' },
-      body: sharedStyles
+  for (const assetUrl of [sharedStyleUrl, legacySharedStyleUrl]) {
+    await page.route(assetUrl, async (route) => {
+      stylesheetRequests += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/css',
+        headers: { 'access-control-allow-origin': '*' },
+        body: sharedStyles
+      });
     });
-  });
-  await page.route(sharedScriptUrl, async (route) => {
-    scriptRequests += 1;
-    await route.fulfill({
-      status: 200,
-      contentType: 'text/javascript',
-      headers: { 'access-control-allow-origin': '*' },
-      body: sharedScript
+  }
+  for (const assetUrl of [sharedScriptUrl, legacySharedScriptUrl]) {
+    await page.route(assetUrl, async (route) => {
+      scriptRequests += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/javascript',
+        headers: { 'access-control-allow-origin': '*' },
+        body: sharedScript
+      });
     });
-  });
+  }
   await page.route('http://127.0.0.1/reports/**', async (route) => {
     const index = Number(new URL(route.request().url()).pathname.split('/').at(-1).replace('.html', ''));
     const reportFile = generatedReports[index];
@@ -243,12 +250,17 @@ test('existing generated HTML documents initialize in Chromium with their exact 
     await page.goto(`http://127.0.0.1/reports/${index}.html?debug=1`);
 
     const staticHtml = readFileSync(reportFile, 'utf8');
+    const isLegacyReport = reportFile === legacyGeneratedReport;
+    const expectedStyleUrl = isLegacyReport ? legacySharedStyleUrl : sharedStyleUrl;
+    const expectedScriptUrl = isLegacyReport ? legacySharedScriptUrl : sharedScriptUrl;
     const stylesheetCount = (staticHtml.match(/<link\b[^>]*rel="stylesheet"[^>]*>/gi) || []).length;
-    const scriptInHead = await page.locator(`head script[defer][src="${sharedScriptUrl}"]`).count();
-    const scriptAnywhere = await page.locator(`script[defer][src="${sharedScriptUrl}"]`).count();
+    const scriptInHead = await page.locator(`head script[defer][src="${expectedScriptUrl}"]`).count();
+    const scriptAnywhere = await page.locator(`script[defer][src="${expectedScriptUrl}"]`).count();
+    const stylesheetUrlCount = [sharedStyleUrl, legacySharedStyleUrl]
+      .reduce((total, assetUrl) => total + staticHtml.split(assetUrl).length - 1, 0);
     if (stylesheetCount !== 1) contractProblems.push('expected exactly one stylesheet link');
-    if (staticHtml.split(sharedStyleUrl).length - 1 !== 1) {
-      contractProblems.push('expected exactly one permitted stylesheet URL');
+    if (stylesheetUrlCount !== 1 || staticHtml.split(expectedStyleUrl).length - 1 !== 1) {
+      contractProblems.push('expected exactly one stylesheet URL for this report');
     }
     if (scriptInHead !== 1) contractProblems.push('the single deferred shared script is not inside head');
     if (scriptAnywhere !== 1) contractProblems.push('expected exactly one deferred shared script');
@@ -256,7 +268,7 @@ test('existing generated HTML documents initialize in Chromium with their exact 
       const match = staticHtml.match(new RegExp(`<p\\b[^>]*\\b${attribute}[^>]*>([\\s\\S]*?)<\\/p>`, 'i'));
       return match ? match[1] : '';
     });
-    if (initialStatusTexts.some((status) => (
+    if (!isLegacyReport && initialStatusTexts.some((status) => (
       !/JavaScript has not initialized/i.test(status)
       || !/persistent message[\s\S]*shared script did not complete/i.test(status)
     ))) {

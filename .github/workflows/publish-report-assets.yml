@@ -1,0 +1,37 @@
+name: Publish shared report assets
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - css/style.css
+      - js/code.js
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-shared-report-assets-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Upload shared assets over explicit FTPS
+        env:
+          FTP_HOST: ${{ secrets.PROMPT_ASSET_FTP_HOST }}
+          FTP_PORT: ${{ vars.PROMPT_ASSET_FTP_PORT || '21' }}
+          FTP_USERNAME: ${{ secrets.PROMPT_ASSET_FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.PROMPT_ASSET_FTP_PASSWORD }}
+          FTP_REMOTE_DIR: ${{ vars.PROMPT_ASSET_FTP_REMOTE_DIR }}
+        run: bash scripts/publish-report-assets.sh

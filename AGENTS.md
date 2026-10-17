@@ -26,10 +26,12 @@ The centrally maintained report assets are:
 - `css/style.css` (the only stylesheet, with Basic, Minimal, and Full configurations)
 - `js/code.js` (the only JavaScript source for generated reports)
 
-Generated HTML must load these exact raw GitHub URLs:
+Generated HTML must load these exact hosted URLs:
 
-- `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/css/style.css`
-- `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`
+- `https://mytech.today/tools/m/config/prompts/style.css`
+- `https://mytech.today/tools/m/config/prompts/code.js`
+
+The `css/style.css` and `js/code.js` files are the local sources of truth. The GitHub Actions workflow `.github/workflows/publish-report-assets.yml` uploads both files over explicit FTPS after either asset changes on `main`. Its server, account, and remote directory must be configured through GitHub Actions secrets and variables as described in `README.md`. Never commit the FTP password.
 
 Use one stylesheet link to `style.css` and one deferred script element for `code.js`. Do not add another stylesheet, use relative asset paths, or substitute different URLs. These are the sole CSS and JavaScript sources for every generated HTML document, for every style and interaction. Do not add inline CSS, inline JavaScript, local CSS or JavaScript files, alternate asset URLs, or other runtime dependencies. The three visual styles are configurations inside `style.css`, selected through `data-report-style="basic|minimal|full"` on `<html>`, not separate files.
 
@@ -41,7 +43,7 @@ Persist the two appearance preferences in `localStorage` under the documented, v
 
 Persist issue progress separately from appearance preferences. Use the key `prompt-refined:issue-progress:v1:<encoded-document-path>`, where `<encoded-document-path>` is `encodeURIComponent(window.location.pathname || document.title || "report")`. Store an allowlisted status map keyed by each issue article's stable ID, with values `incomplete`, `in-progress`, or `complete`. This scopes progress to the current report so matching issue numbers in different reports do not share state. Restore validated values on startup, default missing or invalid values to `incomplete`, and save each change. If storage is unavailable or rejects a write, the controls and in-page visual state must still work, and an accessible status must explain that progress will not persist. Persist only these per-issue progress choices, not report content edits.
 
-The local existence of an asset does not prove that its raw URL is available. That availability depends on the corresponding file being committed and published on the `main` branch. Report this as a release condition when it has not been verified.
+The local existence of an asset or a successful FTP upload does not by itself prove that its hosted URL serves the current file. Availability depends on the assets being pushed to `main`, the publishing workflow completing successfully, and the exact hosted URLs returning usable content. Verify the exact URLs before claiming availability; otherwise report it as an unverified release condition.
 
 Do not add external fonts, images, libraries, trackers, analytics, or other network dependencies. Do not put CSS in `<style>` blocks or `style` attributes. Do not put JavaScript in inline `<script>` blocks, event-handler attributes, or other HTML attributes. `js/code.js` is the sole JavaScript source. Its behavior must remain optional, progressive, small, and safe when clipboard access is unavailable or rejected.
 
@@ -69,11 +71,11 @@ Both report-generation prompts must specify compatible semantic HTML and these s
 
 When changing either report-generation prompt or a shared asset, inspect all related styling, script, offline, accessibility, print, output, and validation instructions for contradictions. Validate the requirements relevant to the change, including:
 
-- Exact raw URLs, one stylesheet link to `style.css`, one deferred script reference, and no relative paths or additional theme stylesheets.
+- Exact hosted URLs, one stylesheet link to `style.css`, one deferred script reference, and no relative paths or additional theme stylesheets.
 - Matching shared selectors in `style.css` for Basic, Minimal, and Full and for System, Light, and Dark; appearance controls must not change the stylesheet URL.
 - `.report-attribution`, `.company-profile`, and `.company-services` remain readable in all three styles and color modes, at narrow widths, and in print.
 - Default Basic/System settings, allowlisted saved preferences, persistence across reloads, and safe behavior if browser storage is unavailable.
-- When browser verification is available, confirm the exact published script URL loads, the appearance fieldset and selects become enabled, the initialization status changes, and appearance choices update the page. If the URL or browser behavior is unverified, report that release condition and do not claim the controls work.
+- When browser verification is available, confirm the exact hosted script URL loads, the appearance fieldset and selects become enabled, the initialization status changes, and appearance choices update the page. If the URL or browser behavior is unverified, report that release condition and do not claim the controls work.
 - Exactly one TOC status indicator and one persistent progress selector per issue; article status, visible badge, TOC status, and stored value must remain synchronized for all three allowed states.
 - Whole-issue copy includes its issue number, all issue content, and implementation prompt, while excluding injected action controls. Verify clipboard success, unavailable/rejected clipboard fallback, and duplicate-initialization protection.
 - Report-scoped progress persistence, invalid saved values falling back to Incomplete, and accessible behavior when storage reads or writes fail.
@@ -84,4 +86,4 @@ When changing either report-generation prompt or a shared asset, inspect all rel
 - Preserved issue counts, classifications, required fields, output paths, and safe no-overwrite rules for each prompt.
 - Clean diffs and no accidental em dash characters where a prompt explicitly forbids them in generated output.
 
-Use repository-supported checks when available. If there is no test framework or browser harness, validate the file and asset contracts directly without adding dependencies. State clearly when browser rendering, remote URL availability, or publication was not checked.
+Use repository-supported checks when available. If there is no test framework or browser harness, validate the file and asset contracts directly without adding dependencies. State clearly when browser rendering, hosted URL availability, or the FTP deployment was not checked.
