@@ -37,6 +37,63 @@ ORIGINAL PROMPT:
 <<< SOFTWARE DEVELOPMENT REQUEST START >>>
 
 [
+generate a new prompt for 'C:\GitHub\prompt-refined\commit.md' that finalizes a session of work and the repo is being worked in.
+This command will update the README.md, CHANGELOG.md, VERSIONS, with all of the relevant changes since the last commit.
+If README.md, CHANGELOG.md, VERSION and VERSIONING.md:"
+# Versioning
+
+FilmBuff uses the root `VERSION` file as the single authoritative source for
+the workspace version.
+
+## Scheme
+
+- The file contains a bare SemVer 2.0.0 string.
+- Examples: `0.3.9`, `1.2.3`, `1.2.3-beta.1`, `1.2.3+build.4`.
+- The value must not include a leading `v`.
+
+## Sync Command
+
+Run the sync after changing `VERSION`:
+
+```bash
+pnpm version:sync
+pnpm version:sync:dry-run
+pnpm version:sync:force
+```
+
+Use `--force` or `--yes` in non-interactive contexts such as CI.
+The CLI starts from the current directory and walks upward until it finds the
+workspace root that contains `VERSION`.
+
+When you are preparing a release note, capture the user-visible summary in
+`CHANGELOG.md` first so the note and the version bump stay aligned.
+
+## What It Updates
+
+The sync tool scans the workspace and rewrites supported version-bearing files
+while preserving formatting and surrounding context. Current detectors include:
+
+- `package.json` version fields
+- `CHANGELOG.md` release headings
+- `Cargo.toml` package versions
+- `pyproject.toml` and `setup.cfg` version fields when present
+- `Chart.yaml` version and `appVersion` fields
+- `Dockerfile*` version labels and build arguments
+- `version.go` and Python version modules such as `__version__.py`
+- Markdown and HTML badge lines that embed release versions
+
+## Atomic Behavior
+
+The sync command snapshots the workspace, plans the update, and then applies
+the writes with rollback on failure. It also caches a lightweight fingerprint
+under `.cli/version-sync-cache.json` so unchanged runs can exit quickly without
+rescanning file contents.
+
+"
+After the updates,
+The all of the uncommitted changes will be committed and pushed to origin/main on the remote repo.
+
+Any merge issues will be handled at the time of the merge by the AI chat session.
 
 ]
 
