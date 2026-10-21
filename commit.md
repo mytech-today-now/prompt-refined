@@ -37,7 +37,7 @@ Complete this section after repository inspection and before editing `README.md`
 
 Derive documentation updates from the actual changes since the last commit, using the diffs, recent history, existing documentation, and project conventions.
 
-- Update `README.md` where the changes make its usage, behavior, setup, requirements, or project description inaccurate or incomplete. Preserve its structure and tone.
+- Update `README.md` where the changes make its usage, behavior, setup, requirements, or project description inaccurate or incomplete. Preserve its structure and tone. Escape literal HTML-sensitive text as needed so the Markdown renderer does not interpret unescaped README text as raw HTML. If HTML is intentionally shown as an example, keep it clearly presented as an example in a fenced code block or escaped literal text so the tags display as code or text rather than becoming markup or disappearing. Verify the rendered README when a Markdown renderer is available, and report if rendering could not be checked.
 - Update `CHANGELOG.md` using its existing format. Include an accurate summary of relevant changes since the last commit. Do not claim behavior or release status that the repository does not prove.
 - Update `VERSIONS` only if that file exists and the repository uses it as a maintained version record. If it is absent, do not create a duplicate version system. Inspect and follow the repository's actual canonical version files and instructions.
 - Do not bump a version merely because you are preparing a commit. Bump it only when the release intent or established repository policy requires it. If no bump is warranted, leave version values unchanged and state that decision briefly.
