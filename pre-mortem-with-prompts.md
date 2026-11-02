@@ -98,13 +98,13 @@ Inspect the repository structure and identify, with file paths:
 Use only these exact shared asset URLs in generated HTML:
 
 - `https://mytech.today/tools/m/config/prompts/style.css`
-- `https://mytech.today/tools/m/config/prompts/code.js`
+- `https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js`
 
 These URLs are authoritative for generated reports and supersede conflicting report-asset URL examples in inspected repository guidance.
 
-Inside `<head>`, include exactly one `<link rel="stylesheet" href="https://mytech.today/tools/m/config/prompts/style.css">` and exactly one deferred `<script defer src="https://mytech.today/tools/m/config/prompts/code.js"></script>`. Keep these exact URLs as the only CSS and JavaScript sources. Do not place either reference in `<body>`, add a relative asset path, or add an alternate stylesheet or script.
+Inside `<head>`, include exactly one `<link rel="stylesheet" href="https://mytech.today/tools/m/config/prompts/style.css">`. Place exactly one `<script defer="" src="https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js"></script>` as the final element inside `<body>`, immediately before `</body>` and after all report content. Do not place the script in `<head>`. Keep these exact URLs as the only CSS and JavaScript sources. Do not add a relative asset path or an alternate stylesheet or script.
 
-The generated document must not contain `<style>` blocks, `style` attributes, inline `<script>` blocks, inline event handlers, duplicated JavaScript, or JavaScript in attributes. The only permitted CSS and JavaScript sources for every style and interaction are the single stylesheet and script above. Do not add local or alternate CSS/JavaScript files, other asset URLs, or external fonts, images, libraries, trackers, analytics, or other network dependencies. Local asset files do not prove that these exact mytech.today URLs are available or serve the intended files. Verify each exact endpoint before claiming asset availability or successful initialization; otherwise report it as an unverified release condition.
+The generated document must not contain `<style>` blocks, `style` attributes, inline `<script>` blocks, inline event handlers, duplicated JavaScript, or JavaScript in attributes. The only permitted CSS and JavaScript sources for every style and interaction are the single stylesheet and script above. Do not add local or alternate CSS/JavaScript files, other asset URLs, or external fonts, images, libraries, trackers, analytics, or other network dependencies. Local asset files do not prove that these exact URLs are available or serve the intended files. Verify each exact endpoint before claiming asset availability or successful initialization; otherwise report it as an unverified release condition.
 
 Every generated report must identify the report author and the reviewed repository and its author or maintainer in document metadata and the visible report header. In `<head>`, include `<meta name="author" content="Kyle Rode, myTech.Today">`, `<meta name="generator" content="myTech.Today prompt-refined report workflow">`, `<meta name="report-repository" content="...">`, `<meta name="report-repository-url" content="...">` when a repository URL is verified, and `<meta name="report-repository-author" content="...">` with the evidence-backed author or maintainer of the reviewed project. Escape metadata values correctly. In `<header class="report-header">`, identify the reviewed repository and verified URL when known, branch or revision, project author or maintainer, and the evidence source for that attribution. Separately identify the report author as Kyle Rode using myTech.Today's prompt-refined workflow. Distinguish report author, project author, repository owner, and recent committers. A commit author alone is not proof of project authorship. If no reliable project authorship evidence is available, use `Not identified from available repository evidence` in `report-repository-author` and the visible project-author field; do not guess.
 
@@ -142,7 +142,7 @@ Never log report or implementation-prompt text, clipboard contents, localStorage
 
 ## Troubleshooting report-control initialization
 
-When a report is said to have disabled controls or an initial initialization message, inspect the actual report HTML and shared selector markup first. Confirm that exactly one stylesheet link and one deferred shared-script reference are inside `<head>`, and check the static disabled state and accessible status text. Then use browser network and console evidence, when available, to check each exact shared asset request, its response status, relevant headers and content type, and whether usable content was returned. Check the report page's actual request and execution context; a successful direct fetch of `code.js` alone does not prove that the page loaded or executed it. A reported “Cache miss” without an HTTP response is an observation, not proof of the cause.
+When a report is said to have disabled controls or an initial initialization message, inspect the actual report HTML and shared selector markup first. Confirm that exactly one stylesheet link is inside `<head>` and one deferred shared-script reference is the final element inside `<body>`, after the report content, and check the static disabled state and accessible status text. Then use browser network and console evidence, when available, to check each exact shared asset request, its response status, relevant headers and content type, and whether usable content was returned. Check the report page's actual request and execution context; a successful direct fetch of `code.js` alone does not prove that the page loaded or executed it. A reported “Cache miss” without an HTTP response is an observation, not proof of the cause.
 
 Separate and label the evidence for these boundaries: (1) an exact hosted asset URL did not return usable content; (2) the browser did not load or execute the referenced script in the report context; (3) the script executed but failed before or during initialization; (4) some features initialized while another failed; and (5) the report markup does not satisfy the shared selector contract. Use opt-in `?debug=1` diagnostics only for failures after script execution, and inspect the source markup for selector mismatches. State which boundary was observed and mark unchecked boundaries unverified.
 
@@ -238,7 +238,7 @@ Create one valid HTML5 document in this order:
    - Responsive viewport metadata
    - Descriptive title that includes the detected project name and generation timestamp
    - Repository and author metadata as specified in the shared attribution contract
-   - Exactly one stylesheet link to the default shared `style.css` URL above and exactly one deferred script element to the shared `code.js` URL above
+   - Exactly one stylesheet link to the default shared `style.css` URL above
 4. `<body>` containing:
    - Header with class `report-header`, title, generation timestamp, detected repository identity, branch or revision, evidence-backed project author/maintainer and attribution evidence, the required myTech.Today company profile, purpose, and the accessible appearance controls specified above
    - Main landmark with class `report-main`
@@ -250,6 +250,7 @@ Create one valid HTML5 document in this order:
    - Exactly 20 issue articles inside `.issue-list`, ordered by severity, likelihood, impact, and urgency, each initialized with `data-progress="incomplete"`
    - Scope notes and limitations in a section with class `scope-notes`
    - Footer with class `report-footer`, repository identity, generation timestamp, output path, and report scope
+   - Exactly one deferred script element to the shared `code.js` URL above as the final body element, immediately before `</body>`
 
 Use semantic elements where appropriate, including:
 
@@ -551,7 +552,7 @@ When reviewing report-control initialization or diagnostics, cover opt-in `?debu
 10. Escape repository code and user-controlled values before embedding them in HTML.
 11. Keep the report readable in modern browsers and when printed.
 12. Use only the exact shared stylesheet and script URLs specified in the asset contract. Do not add external fonts, images, libraries, analytics, trackers, or other network dependencies.
-13. Keep all CSS in the shared stylesheet and all JavaScript in the shared `js/code.js` source. Generated HTML may include only the single stylesheet link and single deferred script reference specified above, both inside `<head>`. Do not embed CSS or JavaScript, add inline style or event-handler attributes, or duplicate script logic. Keep copy and progress enhancements optional and ensure the document remains readable and its issue text and prompts remain selectable if JavaScript is unavailable. The static appearance and issue-progress status messages must make clear that JavaScript has not initialized them; the shared script must replace those messages after successful initialization or announce an accessible error if initialization fails.
+13. Keep all CSS in the shared stylesheet and all JavaScript in the shared `js/code.js` source. Generated HTML may include only the single stylesheet link in `<head>` and the single deferred script reference specified above as the final element inside `<body>`, after all report content. Do not embed CSS or JavaScript, add inline style or event-handler attributes, or duplicate script logic. Keep copy and progress enhancements optional and ensure the document remains readable and its issue text and prompts remain selectable if JavaScript is unavailable. The static appearance and issue-progress status messages must make clear that JavaScript has not initialized them; the shared script must replace those messages after successful initialization or announce an accessible error if initialization fails.
 14. Target a comprehensive report. A typical complete document is 14,000 to 28,000 words of substantive content. Do not pad. Do not omit required subsections to stay short.
 
 # No Em-Dash Rule
@@ -585,9 +586,9 @@ Before completing the task, validate all of the following:
 15. No issue is duplicated or merely a narrower restatement of another issue.
 16. No unsupported file, route, API, service, or behavior is presented as fact.
 17. The file contains no em dash character.
-18. The document references exactly one permitted shared stylesheet URL and one deferred shared script URL, both inside `<head>`, as its only CSS and JavaScript sources, with no other runtime dependencies; its head and visible header contain repository and evidence-backed author metadata plus the required myTech.Today profile.
+18. The document references exactly one permitted shared stylesheet URL inside `<head>` and one deferred shared script URL as the final element inside `<body>`, after all report content, as its only CSS and JavaScript sources, with no other runtime dependencies; its head and visible header contain repository and evidence-backed author metadata plus the required myTech.Today profile.
 19. The document remains understandable with CSS disabled.
-20. The document uses the shared selector contract, one stylesheet link in `<head>` to the exact `style.css` URL, and one deferred script element in `<head>` to the exact `code.js` URL.
+20. The document uses the shared selector contract, one stylesheet link in `<head>` to the exact `style.css` URL, and one `<script defer="" src="https://raw.githubusercontent.com/mytech-today-now/prompt-refined/refs/heads/main/js/code.js"></script>` as the final element inside `<body>`, after the report content.
 21. The document is readable at mobile and desktop widths.
 22. Print preview does not clip text or truncate implementation prompts.
 23. With JavaScript disabled or clipboard access unavailable or rejected, all issue and prompt text remains intact and users receive a clear manual-copy path when controls are present.
