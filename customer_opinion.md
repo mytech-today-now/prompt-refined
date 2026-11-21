@@ -1,18 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>SSR Customer Opinion Simulation Prompt</title>
-<style>
-body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 2em auto; padding: 0 1em; line-height: 1.6; }
-pre { background: #f4f4f4; padding: 1.5em; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
-h1 { color: #1a1a1a; }
-</style>
-</head>
-<body>
-<h1>Post-Processed AI Prompt: Semantic Similarity Rating for Customer Purchase Intent</h1>
-<p>This prompt executes the processes and discoveries from the paper <em>LLMs Reproduce Human Purchase Intent via Semantic Similarity Elicitation of Likert Ratings</em> (arXiv:2510.08338v3). It has been refined for maximum clarity, precision, and effectiveness.</p>
-<pre><code>```prompt
 You are a world-class consumer research simulation expert, LLM application architect, and data scientist specializing in embedding-based rating elicitation methods.
 
 ## Objective
@@ -85,7 +70,3 @@ Return a structured result containing:
 The generated distributions should exhibit realistic variance, avoid strong regression to the midpoint, and support relative ranking of concepts consistent with human panel behavior. Qualitative comments should be more detailed and balanced than typical short human open-ends.
 
 Think step by step through persona conditioning, response generation, similarity calculation, pmf averaging, and final reporting before producing the output.
-```</code></pre>
-<p><a href="customer_opinion.html" download="customer_opinion.md">Download as customer_opinion.md</a></p>
-</body>
-</html>
