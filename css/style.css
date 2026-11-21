@@ -133,6 +133,12 @@ select:focus-visible,
 .company-profile h2 { margin: 0 0 0.4rem; color: var(--heading-color); font-size: 1.2rem; }
 .company-profile p { margin-block: 0.35rem; }
 .company-profile a { color: var(--link-color); }
+.company-info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-block: 0.75rem; }
+.company-info-card { min-width: 0; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: var(--corner-radius); background: var(--soft-background); }
+.company-info-card h3 { margin: 0 0 0.5rem; color: var(--heading-color); font-size: 1.05rem; }
+.company-info-card h3:not(:first-child) { margin-block-start: 1rem; }
+.company-info-card > :last-child { margin-block-end: 0; }
+.company-info-card ul { margin-block: 0.35rem 0.8rem; padding-inline-start: 1.25rem; }
 .company-services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.3rem 1.5rem; margin-block: 0.55rem; padding-inline-start: 1.25rem; }
 .report-main { padding-block: 1.5rem 3rem; }
 .report-main > section { margin-block: var(--section-space); }
@@ -374,6 +380,7 @@ pre code { color: inherit; font-size: 0.9em; }
 :root[data-report-style="minimal"] .risk-table-wrap { border-inline: 0; border-radius: 0; }
 :root[data-report-style="minimal"] .report-preferences { border-inline: 0; border-radius: 0; }
 :root[data-report-style="minimal"] .company-profile { padding-inline: 0; border: 0; border-block: 1px solid var(--border-color); border-radius: 0; background: transparent; box-shadow: none; }
+:root[data-report-style="minimal"] .company-info-card { padding: 0; border: 0; border-radius: 0; background: transparent; }
 
 :root[data-report-style="full"] .report-header {
   width: 100%;
@@ -518,6 +525,7 @@ pre code { color: inherit; font-size: 0.9em; }
   .issue-fields dd { margin-bottom: 0.55rem; }
   .report-attribution-fields { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
   .report-attribution-fields dd { margin-bottom: 0.45rem; }
+  .company-info-grid { grid-template-columns: minmax(0, 1fr); }
   .company-services { grid-template-columns: minmax(0, 1fr); }
   .risk-table { min-width: 48rem; }
   .report-preferences { align-items: stretch; }
@@ -550,6 +558,8 @@ pre code { color: inherit; font-size: 0.9em; }
   .report-header h1, .report-title, .report-header p, .report-header a, h1, h2, h3, h4 { color: #000000 !important; }
   .report-attribution { border-color: #555555; }
   .company-profile { border-color: #555555; background: #ffffff !important; color: #000000 !important; box-shadow: none; }
+  .company-info-grid { grid-template-columns: minmax(0, 1fr); }
+  .company-info-card { padding: 0.45rem 0; border: 0; border-top: 1px solid #777777; border-radius: 0; background: #ffffff !important; break-inside: avoid; }
   .company-profile h2, .company-profile a { color: #000000 !important; }
   .report-main { padding: 0.5rem 0; }
   .report-main > section { margin-block: 1rem; }

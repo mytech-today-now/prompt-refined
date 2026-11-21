@@ -32,6 +32,16 @@ Maintain the original goal and spirit while dramatically improving quality, robu
 ORIGINAL PROMPT:
 """
 
+[This prompt is for 'Craft Anything']
+
+
+generate a detailed analysis of all of the feature functionality of the application.  This detailed analysis will serve as a blueprint for a meta application that also has all of the features of this web site.
+
+[Include all the features that I forgot to include.]
+
+[Include all the instructions that I forgot to include]
+
+[be detailed and verbose, but not redundant.]
 
 """
 
